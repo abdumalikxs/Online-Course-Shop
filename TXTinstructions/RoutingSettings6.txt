@@ -1,0 +1,24 @@
+urls.py ---> is responsible for navigation inside DJANGO apps
+
+--- This code allows us to go to admin page 
+urlpatterns = [
+    path('admin/', admin.site.urls),  
+] 
+
+When we go localhost:8000/admin we get redirected to :
+localhost:8000/admin/login/?next=/admin/
+
+Specifically admin.site.urls itself is resposible for this part our link:
+login/?next=/admin/
+
+
+admin was imported from django.contrib as we see in the urls.py
+
+# If we comment this part : path('admin/', admin.site.urls), 
+we won't be able to get to admins page
+
+
+In case if we change path('admin/', admin.site.urls) into : 
+path('my-admin/', admin.site.urls),
+
+We can now go to admins page via  localhost:8000/my-admin

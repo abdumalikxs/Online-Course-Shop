@@ -1,0 +1,114 @@
+Let's now add a Course into Category record - 'Programming' :
+
+1. first create a category variable and assign it a result of calling get:
+run : category = Category.objects.get(id=1) 
+same as:  category = Category.objects.get(pk=1)
+
+2. Now for this category we can add a course :
+run : category.course_set.all()   # course is a name of a model, djagno automatically created 
+course_set object when we did: 'category = models.ForeignKey(Category, on_delete=models.CASCADE)'
+when defining Course model in models.py
+Django automatically gives the reverse relation on the Category side. 
+By default, this reverse relation 
+is named <modelname>_set — so since your model is Course, you get course_set.
+category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="courses") <-- here at the end.
+And use it later like:
+category.courses.all()
+
+Since Course has category = models.ForeignKey(Category, ...), Django automatically makes a way to go backwards:
+	•	From a Course, you access its category with course.category.
+	•	From a Category, you access all related courses with category.course_set.
+
+- As from step 1 the category variable is now the Category object with primary key 1. 
+category.course_set.all() gives you all Course objects linked to that category through the ForeignKey.
+
+
+So now let's actually call that 'category.course_set.all()' without talking too much:
+run:  category.course_set.all()
+got : <QuerySet []>
+# As we see, now in Category table(ID=1 ->'Programming') there are no courses in it.
+
+# Let's add a course into this category.
+# we should give all values for fields of our adding course here code:
+the created_at will be passed automatically, 
+category will be added automatically since we are creating a course for specific category
+so we should pass only: title, price ,students_qty, reviews_qty.
+
+So run: run : category.course_set.create(title="Complete Python Guide", price=99.99,students_qty=100,reviews_qty=50)  
+got:  <Course: Course object (1)>    # means new course was successfully created
+# that 1 that we see is the primary key ID of the new Course record created.
+
+/=/ Now check the Course records:
+run :  Course.objects.all()    # Like we did in previous lesson for category 'Programming'
+got : <QuerySet [<Course: Course object (1)>]>
+
+# It means that we successfully created a Course record from category Class using:
+category.course_set.create(title="Complete Python Guide", price=99.99,students_qty=100,reviews_qty=50)
+
+# Right now we created a course from category.
+## But there are a total of 2 ways of creating a record in Course 
+(one from Course side, and one from Category side) :
+
+//////// 1.	From the Category side (one → many):
+
+category = Category.objects.get(pk=1)
+
+category.course_set.create(
+    title="Complete Python Guide",
+    price=99.99,
+    students_qty=100,
+    reviews_qty=50
+)
+
+//////// 2.	From the Course side (many → one):
+category = Category.objects.get(pk=1)   # get a Category instance
+
+course = Course.objects.create(
+    title="Complete Python Guide",
+    price=99.99,
+    students_qty=100,
+    reviews_qty=50,
+    category=category   # pass the Category instance explicitly
+)
+
+# As we know we can find specific course by its Primary_key:
+run: Course.objects.get(pk=1)
+got: <Course: Course object (1)>
+
+# Now going to DB browser we can see that we have a new record in Courses table.
+
+
+Let's create another course record:
+run: category.course_set.create(title="Complete Java Guide", price=99.99,students_qty=80,reviews_qty=20)
+got : <Course: Course object (2)>  # id=2
+
+### Let's check :
+run: Course.objects.all()
+got : <QuerySet [<Course: Course object (1)>, <Course: Course object (2)>]>
+run : Course.objects.get(id=2).title
+got: 'Complete Java Guide'
+
+# we also can iterate over  QuerySet object that we get from Course.objects.all():
+let's for instance print out only the names of the courses via iteration:
+run: print([course.title for course in Course.objects.all()])
+got: ['Complete Python Guide', 'Complete Java Guide']
+
+
+So Two ways of accessing DATA:
+
+//// 1 ////
+category = Category.objects.get(id=1) 
+category.course_set.get(id=1).title     # acessing the records course_set info since its linked to Courses.
+//// 2 ////
+Course.objects.get(id=1).title
+
+
+
+#### SO ALL THESE WAS MADE USING MODELS, WE DIDNT USE SQL REQUESTS AT ALL. ####
+
+
+# let's go out of interactive shell:
+run: quit()
+
+In the next lesson let's see how we can view information from database to adminstrative panel
+in web interface of our project.

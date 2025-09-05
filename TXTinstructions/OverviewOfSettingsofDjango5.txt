@@ -1,0 +1,127 @@
+Lets take a look at  base/settings.py
+
+settings.py is a module - and there is a description on top of it written in docstring.
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+# We wentfrom settings.py out into root Courses directory with  '.parent.parent'
+
+# there in this file we can see variables that are written in a style like this:
+SECRET_KEY ---> it means this variable is created and wont be change throughotu 
+the life cycle of our program STATIC_VARIABLE e.x.
+
+# Also we can see :
+DEBUG = True --> in Django it shows detailed error pages and auto-reloads during 
+development, but it’s unsafe for production.
+ChatGPT said:
+In Django, DEBUG is a setting that controls whether the project runs in development mode or production mode.
+
+# these are the default apps:
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+for instance admin is responsible for localhost:8000/admin page
+In that page theres authentication of user, for that the django.contrib.auth -> Is responsible
+
+* django.contrib.staticfiles is a Django app that helps you manage and serve static files 
+(like CSS, JavaScript, and images) during development and collect them 
+for deployment in production.
+
+-- We will create our apps later
+
+### Middlewares
+In Django, middleware is a layer that processes requests and responses as they pass between the browser and the view.
+It can do things like:
+Check authentication (is the user logged in?).
+Add or modify data in the request/response.
+Handle security (e.g., CSRF protection).
+Manage sessions or cookies.
+👉 Think of middleware as a chain of filters/hooks that run before and after your views.
+
+# ROOT_URLCONF = 'base.urls'
+It is a path to urls.py file which has settings of navigation between pages of our application.
+
+
+# Theres also TEMPLATES list which has a dict.
+That TEMPLATES setting tells Django how to load and render HTML templates for your app.
+BACKEND → defines the engine (DjangoTemplates) used to render templates.
+DIRS → extra folders where Django should look for templates (empty here).
+APP_DIRS → if True, Django will also look inside each app’s templates/ folder.
+context_processors → inject common variables (like request, user, messages) automatically into every template.
+
+
+
+### WSGI & ASGI settings :
+
+WSGI_APPLICATION = 'base.wsgi.application' 
+--->  its a path to a variable in wsgi module
+
+WSGI is --> Web Server Gateway Interface :
+meaning interface of interaction with web servers
+In Django, it’s a standard interface that lets your Django app(python backend) talk to 
+a web server (like Gunicorn, uWSGI, or mod_wsgi in Apache).
+
+flow looks like : Browser → Web Server → Django → Web Server → Browser
+
+# ASGI 
+Asynchronous Server Gateway Interface 
+WSGI → only supports synchronous (request → response) apps.
+ASGI → supports both synchronous and asynchronous code, 
+which means it can handle long-lived connections like WebSockets, 
+chat apps, live notifications, and real-time features.
+
+# By default WSGI is tuned on and ASGI is turned off 
+
+
+## theres also DATABASES dict
+with a key default : {dict}  
+as we see there it is using SQlite3 in BASE_DIR(base directory variable)
+
+When you run Django with ENGINE = 'django.db.backends.sqlite3', 
+Django under the hood uses Python’s sqlite3 module to handle the database.
+So sqlite3.connect() is what Django actually calls internally to open or create db.sqlite3.
+You just don’t call it manually because Django’s ORM and migration 
+system handle it for you automatically.
+
+Think of it like this: Django is a wrapper around sqlite3.connect() 
+(and other database drivers for other engines). 
+You write Python models and migrations, and Django handles all the connect(), 
+queries, and table creation behind the scenes.
+
+
+# AUTH_PASSWORD_VALIDATORS:
+They are for checking password
+
+
+# LANGUAGE_CODE = 'en-us'
+This is language code by default it is   'en-us'
+
+# Time zone : TIME_ZONE = 'UTC'
+
+
+# # Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+STATIC_URL = 'static/'  ---> it is for sending them to web servers
+and making avaialbel for webbrowser
+ 
+
+
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' means that each record 
+in your database tables will automatically get a unique primary key of type 
+BigAutoField if you don’t define one yourself.
+
+
+ALL THESE SETTINGS WILL BE APPLIED AT THE TIME WHEN 
+WE MENTION OUR SETTINGS.PY INSIDE MANAGE.PY HERE:
+
+def main():
+    """Run administrative tasks."""                     |||||||
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'base.settings')

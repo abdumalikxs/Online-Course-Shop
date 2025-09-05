@@ -1,0 +1,5 @@
+
+
+path('shop/', include('shop.urls'))
+
+this allowed us to call all the routes from shop by shop/ path 

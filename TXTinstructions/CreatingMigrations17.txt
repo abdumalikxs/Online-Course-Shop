@@ -1,0 +1,26 @@
+For our Category and Course tables to appear , we should create migrations for our Shop app
+and then we should apply these migrations.
+
+For this let's open Terminal and lets create migrations first
+- As of now if we open migrations folder inside shop we can see that there are no migrations there.
+
+
+Run this for creating migrations for all of the registered APPs for our Project:  
+' python manage.py makemigrations ' 
+
+# we got this message:
+Migrations for 'shop':
+  shop/migrations/0001_initial.py      # migrations file created is : 0001_initial.py
+    - Create model Category
+    - Create model Course
+
+# Now we can  see that in migrations folder there is this  file:   0001_initial.py
+
+Let's open this file and see what is inside it.
+# In here we can see the way of creating various Models in python
+# !!!NOTE!!! that 'id' field gets created automatically in there :
+This particular field is called PRIMARY_KEY.
+
+
+# So after applying these migrations this python code will be turned into sql requests
+which will be executed for database Sqlite3 in our case

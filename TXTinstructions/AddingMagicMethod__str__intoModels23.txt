@@ -1,0 +1,52 @@
+So even going to Courses --> Course object (2) there in 
+Category:(field)   we see  Category object(1)
+
+The two non-clear things are Course object(2) and Category object(1) 
+it would be great to name them Java... and Programming respectively.
+
+For this let's go back to models.py in shop and for Category class
+let's add magic Method __str__.
+
+
+•In Django admin page in Webbrowser, whenever it needs to list objects 
+(for example in dropdowns, tables, or foreign key selectors), 
+it internally calls str(obj) on each model instance.
+--> and it triggers __str__() magi method.
+
+So basically in web interface Django does print(object)
+and thsi thing calls __str__()
+But by default it is just like - Course object(1)
+
+Let's do the same thign for Courses.
+
+# Now everywhere we go we can se normal titles instead of thigns like :
+Course object(2) and Category object(1) 
+
+
+ALSO 
+actually in this magim method we can return anything for instance instead of title :
+self.title + ' ' +  str(self.student_qty)
+
+    def __str__(self):
+        return self.title + ' ' +  str(self.student_qty) 
+
+        # we converted into str since it was and integer 
+
+So that now we see in web interface things like : Complete Java Guide 80
+
+
+# Let's add a new course in Web Interface
+- add course and write evrything manually
+- save
+---> yeah nwo we got a new record , and there are total of 3 records as of now.
+
+
+########
+So now, in the next lesson we are going to view(display) courses in web-interface for  
+specifically our shop app(http://localhost:8000/shop/).
+
+For now if we go to http://localhost:8000/shop/, 
+it only displays this message:
+Hello from the Shop App
+
+Instead of this we want to see a table will all of the Courses.

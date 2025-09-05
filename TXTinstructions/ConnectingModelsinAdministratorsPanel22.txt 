@@ -1,0 +1,64 @@
+Let's check in web Interface in Administrative panel if we have access
+to creating and deleting courses and categories.
+
+# as we can see we can work with users and groups but we dont see anything 
+related to courses and categories.
+
+To be able to use Courses and Categories we have to register our created models that were for Shop app.
+
+For this we have to go to shop/admin.py:
+---> and here we should register our models, 
+and as we defined our models in model.py, we should import them from there.
+
+So that admin.py should look like this:
+''''''
+from django.contrib import admin
+from . import models
+
+# Register your models here.
+
+admin.site.register(models.Category)
+admin.site.register(models.Course)
+
+	# •	admin.site → the Django admin interface object.
+	# •	.register(...) → method that tells the admin to include this model.
+'''''''
+
+### Now go to broser and update the page, now we see
+Shop
+Categorys
+Courses
+
+# Clicking shop we will go to Administrative panel of specific SHOP.
+# Clicking Categorys, we see a list of categories, in our case it shows 
+one element: Category object (1)
+If we click Category object (1) , we are gonna see Title: Programming
+also Created at : and dates there.
+
+# Later we will learn how to directly name Category object (1) to --> Programming in that list.
+
+
+ALSO these things happen default in Django admin:
+	1.	It detects all fields from your model and makes form inputs for them.
+	2.	It prettifies field names by replacing _ with spaces and capitalizing (e.g., created_at → “Created at”).
+    3.	It renders inputs based on field type (e.g., DateTimeField → calendar + time picker).
+
+
+# From admin panel we have access to editing the categories in there.
+ - we can delete categories
+ - create more categories
+
+ 
+### Let's go to Courses now :
+there is Course object (2) and Course object (1)
+
+Let's click Course object (2):
+and here we see all of tthe fields and their Data informations
+
+# let's edit the price for instance into 89.99, and save it.
+# database got updated as well and I see 89.99 value.
+
+
+#### SO, OVERALL :   
+The Django admin panel lets us easily add, edit, update, and delete records in our database tables.
+(in our case tables Courses and Categories)

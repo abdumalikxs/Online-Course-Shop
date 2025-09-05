@@ -1,0 +1,87 @@
+Let's now using terminal create records in tables based on Category and Course models
+
+Run on terminal: 'python manage.py shell'
+This will take us to the shell, where we have access to models(the ones we created) 
+with which we can interact with database.
+
+# here in this shell we have access to all packages and modules in our python app
+- we have a shop package, adn there is a model.py module,
+and from this module we can import Category and Course.
+These are the models for interaction with Database.
+
+-- The corresponding tables in database are created via migrations,
+that's why using these models we now can create records in databases.
+
+Run: 'from shop.models import Category, Course'
+Now we have access to classes(models) Course and Category.
+
+let's run: 'Course.objects.all()' --> with this syntax we can get all course records from Database
+we got : <QuerySet []>  --> empty sequence, which is instance of a QuerySet class.
+
+do same for Category: 'Category.objects.all()'
+we got :  <QuerySet []> 
+
+--- This means that in our database we dont have any records based on Category and Course tables.
+
+----> Let's create a Category record with this syntax:
+1. we craete a new variable and give all of its field values as arguments (Category has 2 fields:
+ title, created_at) , but created_at already has a default value (default=timezone.now)
+ If you indicate created_at, Django saves your value; if not, it uses the default timezone.now.
+ Also Priamry_key ID will be created by itself too.
+
+ SO In Terminal run :   'new_category = Category(title='Programming')'
+
+2. Now we should call 'save()' method for new_category object.
+run:  'new_category.save()'
+
+/=/=/ Now category record was saved in Database successfully.
+
+- Now let's run a command to get all of the values from Category table in database again:
+run : 'Category.objects.all()'
+now we got : <QuerySet [<Category: Category object (1)>]>
+
+-- Now let's see if we can access the Name and the ID of the Category record(instance) : 
+run: 'new_category.id'
+got (it's ID): 1 
+
+run: 'new_category.title'
+got : 'Programming'
+
+run: 'new_category.created_at'
+got : 'datetime.datetime(2025, 9, 3, 17, 46, 38, 472612, tzinfo=datetime.timezone.utc)'
+
+### Also it is possible to access the fields from the QuerySet, but you need to iterate or index it:
+it will look like this:
+
+category = Category.objects.all()[0]
+print(category.id)      # 1
+print(category.title)   # Programming
+
+or it can look like thsi if we iterate:
+for c in Category.objects.all():
+    print(c.id, c.title)
+
+
+#### Now let's try to find a Category based on specific ID.
+run : 'Category.objects.get(pk=1)'     # pk named argument means primary_key
+got: <Category: Category object (1)>  # we got result from database
+-- we can get access to its ID now:
+run: Category.objects.get(pk=1).id
+got: 1
+run : Category.objects.get(pk=1).title
+got : 'Programming'
+run: Category.objects.get(pk=1).created_at
+got : datetime.datetime(2025, 9, 3, 17, 46, 38, 472612, tzinfo=datetime.timezone.utc)
+
+-- Or for instance if we know other filed than ID, we can do like this:
+run : Category.objects.get(title="Programming").id
+got : 1
+run : Category.objects.get(title="Programming").created_at
+got : datetime.datetime(2025, 9, 3, 17, 46, 38, 472612, tzinfo=datetime.timezone.utc)
+
+
+#### Also we can use filter instead of get like this:
+run: Category.objects.filter(pk=1)
+got: <QuerySet [<Category: Category object (1)>]>
+run: Category.objects.filter(title='Programming')
+got: <QuerySet [<Category: Category object (1)>]>

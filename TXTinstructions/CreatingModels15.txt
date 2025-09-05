@@ -1,0 +1,36 @@
+Lets now create  a model for our shop app
+so that we can interact with database for our app
+
+# lets make one table for categories of courses
+# and the second one for courses
+
+So it will be like one Category can have several courses.
+This is called ONE-TO-MANY relationship
+
+
+#### Models are created with a python class, here we are creating two models(two tables):
+shop/models.py :
+
+from django.db import models
+from django.utils import timezone
+
+# Create your models here.
+                #parent class
+class Category(models.Model):   # Model for a Category
+    # now we indicate what fields will be there in database table
+    #  we do it using attributes of a class
+    title = models.CharField(max_length=255) # Charfield means value will be in 'str' type
+    created_at = models.DateTimeField(default=timezone.now) # date will be generated automatically
+
+class Course(models.Model):
+    title = models.CharField(max_length=255)
+    price = models.FloatField()
+    students_qty = models.IntegerField()
+    reviews_qty = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Foreign key means key from a different table
+# on_delete=models.CASCADE  --> means that when deleting specific category, 
+# automatically the Course instances of it will be deleted as well.
+    created_at = models.DateTimeField(default=timezone.now) # date will be generated automatically
+
+
+# Note that all this was made not writing even a line of SQL request

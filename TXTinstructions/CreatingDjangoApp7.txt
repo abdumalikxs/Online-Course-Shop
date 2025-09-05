@@ -1,0 +1,16 @@
+# In django we can create many various apps,
+Which we can reuse in many projects in Django.
+
+For instance for internet shop we can : 
+create one app for administrative panel for those who will be processing orders
+and we can resue this app in other Django projects
+
+We can think of Django apps as a separate componnet of one big Prject(app).
+
+Often one project has many apps that work together and from a bigger app.
+And thoe mini apps can be reused in other different apps.
+
+
+### In terminal run:
+   'python manage.py startapp shop'
+* A new dir shop appeared on root directory

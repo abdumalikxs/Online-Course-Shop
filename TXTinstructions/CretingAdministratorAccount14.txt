@@ -1,0 +1,22 @@
+# lets create a superuser:
+'python manage.py createsuperuser'
+asks for Username : lets do for isntance 'abdu'
+email : adalerzdoa2@gmail.com
+password : 12345
+
+# SuperUser is successfully created.
+
+# now using credentials we are in the administrative part of our Django project
+
+# There if for instance we will try to change the password we are gonna be redirected to here:
+http://localhost:8000/admin/password_change/
+this url is given to us by 'path('admin/', admin.site.urls)' from base.urls file.
+
+--- so admin.site.urls continues http://localhost:8000/admin/.
+
+## So from the box Django provide users and groups that are integrated with Sqlite
+
+- For instance, Now we can go to DB browser and there go to table  ' auth_user ' :
+- Here we can see all the users and their info: abdu, ... . 
+
+

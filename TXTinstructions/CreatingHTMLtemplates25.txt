@@ -1,0 +1,68 @@
+Let's create a separate HTML template in a separate file.
+And then use it to return result to our client.
+
+Let's go to SHOP dir and create a sub Directory called templates
+- and here create a new template called courses.html
+
+Let's in this HTML document create an html table:
+we can write it all manually but let's write it with 
+Emmet abbreviation, a shorthand that expands into full HTML code:
+
+write : "table>(thead>tr>th*5)(tbody>tr>td*5)" and click TAB.
+and it will generate needed table
+
+Let's for now fill the Table Manually, 
+and also add one button in second row called "Buy"
+-save file
+
+
+# Now we should use this HTML template in Views.py:
+- as we see there is already import of a function called 'render'  
+from module called shortcuts
+--> using this render func we can return answer to our user based on specific template 
+that's why instead of HttpResponse return in our index,
+let's return the result of a render() function.
+--> and the first argument of render() is 
+request - a request from client that we get in index(request)
+
+!Remember that every View function receives request from user and returns a result.
+so it's mandatory for every view function to have argument called request.
+
+--> the second argument is a name of our template file in string format:
+# django will search that file automatically inside the templates sub-directory that we created.
+...
+
+S0 now our views.py looks like this:
+
+from django.shortcuts import render
+from django.http import HttpResponse  # importing HttpResponse class
+# Create your views here.
+# means in current file we want to find module called models.py
+from .models import Course
+# and import Course from there
+# Without the dot, Python (not Django) searches from the project root where
+# manage.py runs, so it skips your app folder.
+
+
+def index(request):     # request that we get from user
+    courses = Course.objects.all()
+    # django will search courses.html inside the templates sub-directory that we created
+    return render(request, 'courses.html')
+
+# A request is the HttpRequest object containing all details of the user’s HTTP call,
+# triggered whenever the browser visits a URL
+# The request in a view is always the HttpRequest object (not the button),
+# carrying data sent by the browser.
+
+
+#Let's save it and see the result in browser.
+
+- Yes, we can now see the HTML table that we created in courses.html file.
+
+# now opening page source we see that code for table that we wrote.
+
+
+#### Next let's see how we can fill this table up with our Course Data from
+our database.
+and since we already have 
+'courses = Course.objects.all()'   -->  we can use it for this purpose.

@@ -1,0 +1,8 @@
+db.sqlite3 file has a database for our project DJango, 
+where all of our records will be saved.
+
+# For django by default sqlite3 is used, tho other databases are supported as well.
+
+
+### Let's consider base directory files now:
+# there should appear __pycache__ after a while
