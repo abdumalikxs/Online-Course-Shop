@@ -1,0 +1,50 @@
+We should make some changes into single_course view function to handle cases
+when there is no such a course in the Database.
+
+ now make it look like : 
+
+
+def single_course(request, course_id):
+    try:
+        course = Course.objects.get(pk=course_id)
+        return render(request, 'single_course.html', {'course': course})
+    except Course.DoesNotExist:     # an error class : Course.DoesNotExist
+        raise Http404()  # should first import it
+
+
+----
+We can check that server really returns us code 404 by right click and Inspect Element:
+
+go to Network, go to Headers and we see :
+
+Status Code: 404 Not Found
+
+Now go to this link and see:
+http://localhost:8000/shop/3
+
+we get there : --->   Status code: 200 OK 
+meaning page was successfully found and gave to a client .
+
+
+
+Now let's do the same functionality but without a Try Catch Block.
+
+for this: from shortcuts import get_object_or_404 . 
+
+this function inside itself already includes generation of mistakes in case
+if there is no object in DB 
+
+--- Now instead of getting our object from database with get we will
+access it with get_object_or_404.
+
+get_object_or_404  expects from us 2 arguments , a name of Model and teh second is the searching object.
+
+it looks like this :
+
+    # OPTION 2
+    course = get_object_or_404(Course, pk=course_id)
+    return render(request, 'single_course.html', {'course': course})
+
+
+Now in broser we even see this text in 404 page:
+No Course matches the given query.  --- thanks to get_object_or_404.

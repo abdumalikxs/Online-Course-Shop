@@ -1,0 +1,61 @@
+In database we already have courses and categories,
+and now we are gonna create an API service with which we will
+be able to interact with our database, we will be able to request data about the course 
+about the categories, we will be able to delete records and also we would 
+be able to create new records in database, and all of these things 
+will be made possible with RestAPI.
+
+------
+For creating API apps in Django projects there are two main popular libraries:
+ - Django Rest framework 
+    * more for big projects, and has a huge amount of various functions
+    * can be a little hard for initial setup
+
+ - django-tastypie
+    * more simple library
+
+So let's go to pypi.org and find tastypie:
+https://pypi.org/project/django-tastypie/
+
+run the command line to install.
+
+this is default:  'pip install django-tastypie'
+
+but instead we will use :  'pipenv install django-tastypie'
+cuz we want to install it into virtual environment.
+
+Succesfully instaleld the package
+
+Now going to Pipfile we can find that there is also django-tastypie appeared.
+
+
+
+### Let's create one more App in our project:
+go terminal and run: 'python manage.py startapp api'
+
+After running this command in our root directory there appeared a new directory called
+api.
+
+// To remind base dir is our main dir of our Django project and there we have all the settings
+of our project including file settings.py,
+and api and shop are two different Apps.
+
+-- If we open api directory there we see all of the files that we already know:
+admin, apps, models, tests, views.
+there's also __init__.py file so the api is considered to be a package in python terms.
+
+_______
+Let's start from installing api app into our main project.
+
+-- For this we should add a path to a Class that is located inside apps.py of our api App
+into the settings.py that is in base.
+
+- go to base and in settings.py INSTALLED_APPS include our new app api's Class
+- save.
+
+As of now we registered our new app
+
+
+
+In the next video we will create necessary models that will describe how our API
+app will be working with the database.

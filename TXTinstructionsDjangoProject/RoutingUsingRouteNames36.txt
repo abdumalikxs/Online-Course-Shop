@@ -1,0 +1,46 @@
+The other way we can manage routing is by using route names:
+
+by route names I mean names that we gave them in urls.py :
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('<int:course_id>', views.single_course, name='single_course')
+]
+
+Those were the names that we assigned to those specific pathes,
+so that now we can refer to those pathes via their names.
+
+Our Anchor Text will look have a syntax like this :
+
+ <a href={% url 'single_course' course.id %}>{{ course.title }}</a>
+
+ --- we pass 'course.id' cuz our path expects an argument in here :
+
+ path('<int:course_id>', views.single_course, name='single_course')
+
+ If we do not there will be an Error
+
+
+
+ So Overall there are 3 methods of implementing Routing:
+
+1. Relative path
+<a href="{{course.id}}">Link</a>
+	•	Browser appends 1 to the current page’s URL.
+	•	Works only if you’re already inside /shop/ or /courses/.
+	•	❌ Breaks if template is used on another page (e.g. /about/ → /about/1).
+
+2. Absolute hardcoded path
+<a href="/shop/{{course.id}}">Link</a>
+	•	Always points to /shop/1.
+	•	Doesn’t depend on current page.
+	•	❌ Breaks if you rename the prefix in urls.py (e.g. change /shop/ → /courses/).
+
+3. Django dynamic path
+<a href="{% url 'single_course' course.id %}">Link</a>
+	•	Django looks up the URL pattern by name (single_course).
+	•	Builds the correct absolute URL (/shop/1 or /courses/1) automatically.
+	•	✅ Most flexible — never breaks if prefixes change in urls.py.
+
+
+    SO the best versions is the third one.

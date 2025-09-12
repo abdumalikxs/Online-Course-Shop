@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('shop/', include('shop.urls')),  # include all routes from shop.urls
+    # include all routes from shop.urls
+    path('shop/', include('shop.urls')),
 ]
 # Django Congratulations page now localhost:8000 disapears cuz we added some routings.

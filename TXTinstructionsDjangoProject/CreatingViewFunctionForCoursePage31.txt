@@ -1,0 +1,10 @@
+If your URL pattern has <int:course_id>, then your view must accept course_id.
+If you change it to <int:id>, your view must also use id.
+
+View func will look like this:
+
+def single_course(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    return render(request, 'single_course.html', {'course': course})
+
+Next we will create single_course.html
