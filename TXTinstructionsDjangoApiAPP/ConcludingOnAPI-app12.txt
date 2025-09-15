@@ -1,0 +1,28 @@
+to initialize API app we installed django-tastypie library
+
+- next, we created models for two resources.
+- for those two classes we defined class Meta, with queryset, resource_name, allowed_methods.
+
+For resource we allowed only GET
+For course resource we allowed 3 methods get post delete
+
+we created CustomAuthentication for CourseResource
+which allows GET for CourseResource to work without authentication
+
+
+The two apps , shop and api are fully isolated from each other and operate separately.
+
+also in settings.py we added api.apps.ApiConfig
+and 'tastypie'
+then we applied the migrations and in the database we got two additional tables:
+tastypie_apiaccess
+tastypie_apikey
+
+and we created a key in admin's panel so that we could do authentication 
+when sending post or delete requests.
+
+We donwloaded postman to test various requests.
+
+and also in urls.py base we added a path like this:
+
+path("api/", include(api.urls)) to make this app available for users.

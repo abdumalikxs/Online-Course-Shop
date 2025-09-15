@@ -1,0 +1,32 @@
+To do some changes to admin's panel we should go to shop to module admin.py
+
+write these there:
+admin.site.site_header = 'Courses Admin'
+admin.site.site_title = 'My Courses'
+admin.site.index_title = 'Welcome to the Courses admin area'
+
+got update web page with new texts
+
+
+Now we will do so that we can control categories and courses from the same page
+
+let's first make so that we can see some table fields of courses near their names
+
+We should add a new class with the fields to be displayed:
+
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price','category')
+
+now we should include this Class as a second arguemtn when we register our class related to it. : 
+
+admin.site.register(models.Category)
+admin.site.register(models.Course, CourseAdmin)
+
+Now, we see a better display in the page for Courses with more details about the fields.
+
+Let's do the same for the Category :
+
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', 'category')
+
+admin.site.register(models.Category, CategoryAdmin)

@@ -1,0 +1,23 @@
+# Now we are gonna see, how using dehydrate module we can change the way , how the data is 
+displayed when getting it via get request.
+
+For instance let's change the 'title' of the course to come out in Captial letters.
+
+•	If you define a method like def dehydrate_title(self, bundle):, 
+Tastypie automatically looks for dehydrate_<fieldname> when serializing each field.
+•	In this case, <fieldname> must match the model/resource field name (title).
+•	So if your model has title, Tastypie knows to call dehydrate_title during GET 
+requests to modify how that field is returned.
+
+
+    def dehydrate_title(self, bundle):
+        # convert's JSON's title into upper.
+        return bundle.data['title'].upper()
+
+
+-- go to postman and send GET request again.
+now we got "COMPLETE PYTHON GUIDE"
+
+
+    # •	Hydrate = JSON input → model
+    # • Dehydrate = model → JSON output

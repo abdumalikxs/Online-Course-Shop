@@ -1,0 +1,107 @@
+Now we can see that Get requests are working in webbroser for Courses and Categories
+cuz we are seing the JSON when we go ofr courses or specific records.
+
+
+Now let's try to send DELETE request to delete some course from database.
+
+For this let's install one more app which is called Postman.
+
+Using this app we can send various requests to Api server.
+
+Let's donwload it from browser and open it.
+
+Now in this app we have to create a new request.
+
+For this select GET request and then on the right side write the URL:
+http://localhost:8000//api/v1/
+
+and we got this response, same as in normal browser:
+
+{
+    "categories": {
+        "list_endpoint": "/api/v1/categories/",
+        "schema": "/api/v1/categories/schema/"
+    },
+    "courses": {
+        "list_endpoint": "/api/v1/courses/",
+        "schema": "/api/v1/courses/schema/"
+    }
+}
+
+Let's do for this one now : http://localhost:8000/api/v1/categories/
+
+We got this output same as in normal browser.
+
+
+
+If we write this: http://localhost:8000/api/v1/courses/10
+
+we are getting Status: 404 Not Found . 
+this is the correct response from server in case when the course isnt found
+
+!!!!!!!!!
+In Django REST Framework (DRF) or Tastypie, missing or invalid resources are automatically 
+handled with proper HTTP error responses like 404, unlike normal Django views where you must 
+handle such errors manually with try/except or get_object_or_404.
+
+
+Okay, now let's try to change the GET request into DELETE.
+
+select DELETE and url http://localhost:8000/api/v1/courses/2 .
+
+click send.
+
+Now we see Status: 200 OK
+
+Although we are supposed to be getting unauthorized
+
+///  the resource was not deleted, Let's make sure that it wasnt by going to
+ our frontend and refreshing the page.
+
+ We still have Complete java guide so it wasnt deleted.
+
+
+-----------------
+ Now why we were not able to delete it ?
+
+let's go to the terminal where our server is running.
+
+[13/Sep/2025 16:42:58] "GET /api/v1/courses/10/ HTTP/1.1" 404 0
+[13/Sep/2025 16:47:03] "GET /api/v1/courses/2 HTTP/1.1" 301 0
+[13/Sep/2025 16:47:03] "GET /api/v1/courses/2/ HTTP/1.1" 200 171
+[13/Sep/2025 16:49:06] "DELETE /api/v1/courses/2 HTTP/1.1" 301 0
+[13/Sep/2025 16:49:06] "GET /api/v1/courses/2/ HTTP/1.1" 200 171
+
+we see get requests and also a Delete request.
+
+But look at what answer we got for delete request,
+it is answer 301 
+
+301 means redirect , which means that the resource was redirected
+
+And if we take a closer look these two for instance:
+[13/Sep/2025 16:49:06] "DELETE /api/v1/courses/2 HTTP/1.1" 301 0
+[13/Sep/2025 16:49:06] "GET /api/v1/courses/2/ HTTP/1.1" 200 171
+
+we can see that the delete one doesn't have a slash at the end.
+
+---------
+By default Django requires a trailing slash (/) on API URLs because APPEND_SLASH=True.
+	•	Without / → you get a 301 redirect, and Postman turns your DELETE into a GET.
+	•	With / → works correctly.
+	•	You can disable this by setting APPEND_SLASH=False, but then you must be consistent with no slashes.
+---------
+
+let's add a slash and send a postman again with this:
+http://localhost:8000/api/v1/courses/2/
+
+
+Now we got the right answer Status: 401 Unauthorized
+this means server is not allowing us to delete thsi specific resource with id=2.
+
+
+To be able to delete and create resources using post we have to set up 
+authentication and authorization 
+
+
+Which we will do in the next lesson

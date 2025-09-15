@@ -1,0 +1,112 @@
+if we change dehydrate into this:
+    def dehydrate(self, bundle):
+        # returns __str__'s result
+        # if we do category_id it will return nubmer of cateogry instead of str
+        bundle.data['category_id'] = bundle.obj.category_id
+        bundle.data['category'] = bundle.obj.category   # create new object withing json with key "category"
+        return bundle
+
+we are gonna get this response for Get requuest:
+
+        {
+            "category": "Programming",
+            "category_id": 1,
+            "created_at": "2025-09-03T19:41:33.543442",
+            "id": 1,
+            "price": 99.99,
+            "resource_uri": "/api/v1/courses/1/",
+            "reviews_qty": 50,
+            "students_qty": 100,
+            "title": "COMPLETE PYTHON GUIDE"
+        },
+
+Now let's see how we can filter out some fields.
+
+For instance if we dont want to show created_at we can do this : 
+- go to CourseResource class , and we can do the thing in Meta class.
+by adding one more attribute which is named excludes:
+
+--->   excludes = ['reviews_qty', 'created_at']
+
+	•	Normally, Tastypie serializes all fields from the Course model into JSON.
+	•	By adding excludes, you’re saying: “don’t show these fields in the response.”
+	•	So when you do a GET request, reviews_qty and created_at will not appear in the JSON.
+
+
+Now let's run it again and check the result.
+
+Now we see this:
+        {
+            "category": "Programming",
+            "category_id": 1,
+            "id": 1,
+            "price": 99.99,
+            "resource_uri": "/api/v1/courses/1/",
+            "students_qty": 100,
+            "title": "COMPLETE PYTHON GUIDE"
+        },
+
+        ----> theres no created_at and reviews_qty.
+
+
+    we get same thing going to : http://localhost:8000/api/v1/courses/1
+
+
+
+---- Also another thing : 
+
+let's go to base/urls.py   routing for our api app. 
+
+we did these things in urls.py :
+
+api = Api(api_name='v1')
+# We create instances so Tastypie can register and expose them as working API endpoints.
+course_resource = CourseResource()
+category_resource = CategoryResource()
+api.register(course_resource)
+api.register(category_resource)
+
+_--> it is not a very good practice to do it here so that let's take them to urls.py 
+of api app.
+
+not that we should add urlpatterns from new in new urls.py
+
+api/urls.py : 
+
+from api.models import CategoryResource, CourseResource
+from tastypie.api import Api
+from django.urls import path, include
+
+# api/v1/courses/         GET, POST
+# api/v1/courses/1/       GET, DELETE
+# api/v1/categories/      GET
+# api/v1/categories/1/    GET
+
+api = Api(api_name='v1')
+# We create instances so Tastypie can register and expose them as working API endpoints.
+course_resource = CourseResource()
+category_resource = CategoryResource()
+api.register(course_resource)
+api.register(category_resource)
+
+# Now after registration the routes to our resources will be like this:
+# api/v1/courses
+# api/v1/categories
+
+urlpatterns = [
+    path('', include(api.urls), name='index')
+]
+
+
+
+
+--- and also we should replace base/urls.py:
+path('api/', include(api.urls)),
+
+into :  path('api/', include('api.urls')),
+
+
+In next lesson we will talk about what we should view in teh main page of our Django project
+because with http://localhost:8000
+
+--- we are getting page not found

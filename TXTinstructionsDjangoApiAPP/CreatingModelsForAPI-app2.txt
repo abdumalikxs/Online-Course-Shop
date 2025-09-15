@@ -1,0 +1,132 @@
+as of now we did these:
+- created api app
+- installed dependencies to venv
+- registered our app in django
+
+
+### Now let's go to models.py in api app and create our models for interaction with database.
+
+Let' discuss first how our API service will be working:
+
+- we want to make it possible to be able to go to for instance this url:
+/api/v1/courses     and get the list of all courses from database
+
+if we add '/1' so it looks like this  /api/v1/courses/1
+it means we want to get a specific course via our api service
+
+- and the same applis to categories
+/api/v1/categories     and also for accessing specific categories
+/api/v1/categories/1  or /api/v1/categories/2 etc.
+
+It means that our main routes will be categories and courses:
+/api/v1/courses
+/api/v1/categories
+
+
+And for these we will create two necessary models.
+and those models in API terms are called resources 
+
+- meaning we will have access to two resources : categories and courses
+and then we will set up routing so that we have 
+prefix : /api/
+api-version: /api/v1
+
+ofcourse we can remove version like this: /api/categories
+but often in real projects version is specified. 
+So we will do it with version 
+
+
+OVERALL
+	•	In Python: you define a class (e.g., class Course:).
+	•	In Django: that class becomes a model if it inherits from models.Model (e.g., class Course(models.Model):). A model = database table schema + Python logic.
+	•	In API terms: when you expose that model’s data through an endpoint (/api/v1/courses), it’s treated as a resource.
+
+So: Class → Model → Resource depending on context.
+
+
+###############
+Let's now create model-Classes which will describe the resources.
+resources that we have are : categories and courses
+
+
+At first in models.py we should add an import from django-tastypie library.
+
+we will not use this :
+' from django.db import models '
+
+so delete it.
+Cuz we need models only if your API is working with your own database tables. 
+If your API is purely for external data or calculations, you can skip it.
+
+import it:
+from tastypie.resources import ModelResource    # ModelResource is a class
+
+//////////////
+Now create  a class for a Resource called Category:
+class CategoryResource(ModelResource):
+
+inside this class let's create one more class called 'Meta',
+it will be a personal attribute of CategoryResource Class
+-------------/////
+In Tastypie (and also Django models/forms), Meta is just an inner class you put inside your resource (or model, or form).
+
+It doesn’t do anything special by itself in Python — it’s not a keyword.
+Tastypie simply looks for a class named Meta inside your resource and reads its attributes as configuration options.
+-------------/////
+In Meta class we should add these personal Attributes:
+
+1. queryset 
+
+A queryset in Django is basically a collection of objects from the database.
+	•	It comes from a model (e.g., Category.objects.all() gets all rows from the Category table).
+	•	You can filter, order, or limit it (e.g., Category.objects.filter(name="Books")).
+	•	In your Tastypie resource, queryset tells the API what data this resource should expose.
+
+but for this to work we should import Category model from our shop app:
+from shop.models import Category, Course
+
+2. resource_name
+
+is part of the Tastypie configuration.
+
+It tells Tastypie what the endpoint URL for this resource should look like.
+	•	Here, the CategoryResource will be accessible under the path /api/categories/.
+	•	Without it, Tastypie would try to use the model name (category) by default.
+	•	You can customize it to anything you want (e.g., 'cats' → /api/cats/).
+
+So basically, it defines the API resource name (endpoint path) for your model.
+
+
+--> Now let's allow only reading for Categories 
+meaning via API we will have access only to information about Category
+we won't be able to delete Categories or Edit or add new categories.
+
+so for this:
+
+3. allowed_methods = ['get']
+
+meaning we allow only GET requests via our API service for this resource
+the other methods of http such as DELETE POST won't be allowed.
+
+Now we have created CategoryResource class,
+let's create the Class for CourseResource.
+
+resource_name = 'courses'
+
+resource_name = 'courses' is plural because REST endpoints usually represent collections,
+ making /api/v1/courses/ a list and /api/v1/courses/1/ a single item.
+
+Now interesting part for CourseResource Class in:
+ allowed_methods = ['get', 'post', 'delete']
+
+ we put post and delete too ,     !!!!
+ because we want our api to be able to delete and create new course records.
+
+
+ YAHOOOO, as of now we have successfully created two resources 
+ 'courses' and categories'     ---- p.s got names from resource_name.
+
+ save file.
+ And next we will set up Routing for the API app.
+ and these things we will add in the settings of our base.
+

@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # include all routes from shop.urls
-    path('shop/', include('shop.urls')),
+    path('', include('shop.urls')),
+    # course_resource.urls has auto-generated pathes based on your Meta settings inside CourseResource Class.
+    path('api/', include('api.urls')),
 ]
 # Django Congratulations page now localhost:8000 disapears cuz we added some routings.

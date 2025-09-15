@@ -1,0 +1,151 @@
+We already have included Authorization and Authentication for the CourseResource
+and now let's creaete API key for administrator.
+
+At first let's go to the Admin panel of our base app.
+
+Now in admin's panel we should include the ability of creating API key for 
+a user in the web interface, for this we have to register 
+an app called tastypie
+
+Go to base.settings.py --> INSTALLED_APPS :
+add a string 'tastypie'
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'shop.apps.ShopConfig',  # Shop is package, apps is module, ShopConfig is class
+    'api.apps.ApiConfig'  # API app's class
+    'tastypie'
+]
+
+save.
+
+/-/---------//-------/-/-/--/-/-/-/-/-/-/-/-/
+## For shop app to show up in Admin
+1. Add to INSTALLED_APPS in settings.py:
+   'shop.apps.ShopConfig',
+
+2. Create models in shop/models.py:
+   class Category(models.Model): ...
+   class Course(models.Model): ...
+
+3. Register models with admin in shop/admin.py:
+   from django.contrib import admin
+   from . import models
+
+   admin.site.register(models.Category)
+   admin.site.register(models.Course)
+
+4. Run migrations:
+   python manage.py makemigrations shop
+   python manage.py migrate
+
+✅ After that, Category and Course will appear in the Admin panel.
+
+
+## For api app to show up in Admin
+1. Add to INSTALLED_APPS in settings.py:
+   'api.apps.ApiConfig',
+
+2. Check if api/models.py has models. If yes, register them in api/admin.py:
+   from django.contrib import admin
+   from .models import SomeModel
+   admin.site.register(SomeModel)
+
+3. If the api app only defines Tastypie resources (like CourseResource, CategoryResource), those are not Django models, so they won’t show up in Admin by default.
+
+4. To manage API keys for authentication, you also need to:
+   - Add 'tastypie' to INSTALLED_APPS.
+   - Run:
+     python manage.py migrate tastypie
+   - Now, in Admin panel, you’ll see a new section → Tastypie → Api keys.
+
+✅ So:
+- shop app shows up in Admin because it has models you register.
+- api app shows up in Admin only if it has models. Its Tastypie resources don’t appear there, but adding 'tastypie' makes API keys appear.
+
+
+Go to admins panel refresh the page.
+Now we see a TastyPie with Api keys .
+
+Let's think for a second:
+- For an app to appear in the admin panel we should register them inside admin.py
+But here's the trick that we did not but anything to our admin.py and it is empty 
+but we still can see a Table called Tastypies with a model : Api keys 
+
+So here is the answer, we can see Tastypie and Api keys in admin panel because of these: 
+•	Custom apps (like shop) require you to manually register models in admin.py using admin.site.register(...).
+•	Third-party apps (like tastypie) ship with their own admin.py where they already register their models.
+•	Adding 'tastypie' to INSTALLED_APPS loads its models and admin registrations automatically.
+•	The ApiKey model appears in Django Admin because Tastypie has pre-registered it internally.
+•	To use it, you must also run python manage.py migrate tastypie to create the tastypie_apikey table.
+
+
+Let's click Api keys:
+and we got OperationalError on the browser, no such table: tastypie_apikey
+It happened because we did not apply tastypie table's migrations.
+
+-----> So here is the the thing with migrations
+your own app needs makemigrations first; third-party apps like Tastypie already ship with migrations, so you just migrate them.
+
+# Normal app (e.g., shop)
+1) You write models in shop/models.py.
+2) Add 'shop.apps.ShopConfig' to INSTALLED_APPS.
+3) Create migrations (generate from your model code):
+   python manage.py makemigrations shop
+4) Apply migrations (create/alter tables in DB):
+   python manage.py migrate
+5) (Optional) Register models in shop/admin.py so they show in Admin.
+
+# Tastypie case (ApiKey)
+- Tastypie already provides its own model (ApiKey) and its own migrations inside the package.
+- You do not run makemigrations for Tastypie (you didn’t write those models).
+- You only need to:
+  1) Add 'tastypie' to INSTALLED_APPS.
+  2) Apply its packaged migrations:
+     python manage.py migrate tastypie
+     # or simply: python manage.py migrate (applies all pending apps)
+  3) Now the DB table tastypie_apikey is created.
+  4) Tastypie registers ApiKey in its own admin.py, so Admin → “Tastypie → API keys” appears automatically.
+
+
+So let’s apply the migrations for Tastypie’s tables:
+-open terminal
+-stop server
+-runserver
+- Got notified , have two unapplied migrations for tastypie app. 
+- before applying changes lets go to DB broser, and check the tables (there are still 13 tables)
+- stop server
+- run :python manage.py migrate
+got : 
+  Applying tastypie.0001_initial... OK
+  Applying tastypie.0002_api_access_url_length... OK
+- go to DB Browser and refresh , and we now see 15 tables.
+new tables : tastypie_apiaccess, tastypie_apikey
+
+***** You might have noticed that there were two tables in the DB browser which were:
+--- tastypie_apiaccess
+--- tastypie_apikey
+
+So of these two:
+•	ApiKey → model included in INSTALLED_APPS + registered
+ in tastypie/admin.py → you see it in Admin + table in DB.
+•	ApiAccess → model included in INSTALLED_APPS, 
+so table exists in DB, but not registered in 
+tastypie/admin.py → you don’t see it in Admin, unless you register it yourself.
+
+----------
+Now, we can create an API key for interaction with the API service.
+
+Let's go to Admin's panel and refresh the page
+-runserver
+- go to Api keys in admin's panel and click the link
+- now in here we can add a new API key, click add api key
+- For User field we should search and find the user. (In my case ABDU (shows up as id=1) )
+- Let's add a key, and copy it from there and save it.
+
+-> Now key for user abdu was successfully created.

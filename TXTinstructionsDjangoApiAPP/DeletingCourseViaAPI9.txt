@@ -1,0 +1,39 @@
+Now using the API key that we created we can try to delete a record from Database.
+
+- let's create some random course to experiment with it.
+- create course
+- let's delete this course now, and for this go to Postman:
+
+- let's first send get request to get all the courses:
+GET |  http://localhost:8000/api/v1/courses
+
+- we 5 courses , and the Test course we created has an ID of 5.
+- Let's send a delete request and ofcourse now we will add our API key into the header.
+DELETE | http://localhost:8000/api/v1/courses/5/
+- Now we have to add a header, and the header will be called Authorization
+- And the Value for Authorization header will be: 'ApiKey abdu:ierwjfioerfjierfji32949230'
+- Before deleting the course let's go to web interface of shop and see if we have Tes Course (yes, there is.)
+- Now, go back to postman and send the delete request with the link and the header.
+- In status we got Status: 204 No Content.  
+--> we are not seing unauthorized anymore , it means that both Authentication and Authorization
+were successfully completed because we added a key Authorization.
+
+- let's now send a request to get all of the courses:
+GET | http://localhost:8000/api/v1/courses
+- Got total of four courses, test Course was deleted.
+- let's check it in the Web Interface as well. (Yes, it was deleted)
+
+Overall, this way we successfully deleted the Test course using Delete request.
+- go back to terminal where our server runs
+- we see [14/Sep/2025 01:29:03] "DELETE /api/v1/courses/5/ HTTP/1.1" 204 0
+- The status code is: 204
+- Which means resource(course) with id=5 was successfully deleted.
+
+
+So, as of now we have two of our request methods fucntioning properly those are:
+GET and DELETE.
+
+
+
+In the next lesson let's try to make available post to create new resources.
+which is also allowed in allwoed_methods for CourseResource
