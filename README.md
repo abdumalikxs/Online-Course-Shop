@@ -28,6 +28,10 @@ The project demonstrates robust **backend engineering**, **API design**, and **d
 - 🔗 **Seamless URL Routing & Template Rendering**  
   Integrated Django’s routing and templating systems to ensure responsive UI rendering and modular scalability.
 
+- 🔒 **Secure API Access Control**  
+  Implemented API-key authentication in Tastypie, restricting write operations (POST, PUT, PATCH, DELETE) to authorized users while keeping GET requests public for safe data browsing.
+  
+
 ---
 
 ## 🖼️ Interface Preview
@@ -59,6 +63,7 @@ You can view RESTful endpoints tested via Postman for course CRUD operations and
 - Relational database (SQLite3)
 - Responsive HTML/CSS/JS front-end
 - Clean separation of templates, views, and URLs
+- 🔐 **Authentication layer added:** All POST, PUT, and DELETE requests require API-key authentication; only GET requests are public.
 
 ---
 
