@@ -17,7 +17,7 @@ The project demonstrates robust **backend engineering**, **API design**, and **d
 ## 🚀 Key Highlights
 
 - ⚙️ **Optimized Backend Performance**  
-  Engineered backend workflows with efficient query handling and caching — achieving supe-fast apge response time.
+  Engineered backend workflows with efficient query handling and caching, achieving supe-fast page response time.
 
 - 🧩 **RESTful API Design & Testing**  
   Designed and tested **Tastypie REST APIs** using **Postman** for reliable CRUD operations on course and category resources.
