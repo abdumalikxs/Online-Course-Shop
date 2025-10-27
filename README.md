@@ -34,8 +34,7 @@ The project demonstrates robust **backend engineering**, **API design**, and **d
 
 Below is a preview of the **Course List Page**, showing course titles, categories, prices, and enrollment data.
 
-![Courses Shop UI](images/ui-screenshot.png)  
-_(Insert your UI image — e.g., Screenshot 2025-10-27 at 18.51.41.png)_
+<img width="1440" height="815" alt="Screenshot 2025-10-27 at 19 08 55" src="https://github.com/user-attachments/assets/87562467-d7ac-4233-a71b-cda47e76169c" />
 
 ### 🧪 API Testing (Postman)
 
