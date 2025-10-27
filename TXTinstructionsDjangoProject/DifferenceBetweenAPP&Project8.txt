@@ -1,5 +1,0 @@
-# we named our project base because its more visually better:
-
-cuz we call root directory COURSES so that it is:
-
-COURSES --> base(dir with settings), app1, app2, app3

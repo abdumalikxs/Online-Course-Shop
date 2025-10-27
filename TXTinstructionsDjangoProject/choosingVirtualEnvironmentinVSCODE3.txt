@@ -1,3 +1,0 @@
-this will give full path to the current virtualEnv for current project:
-'pipenv --venv'
-
