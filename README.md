@@ -40,8 +40,12 @@ Below is a preview of the **Course List Page**, showing course titles, categorie
 
 You can view RESTful endpoints tested via Postman for course CRUD operations and serialization.
 
-![Postman API Example](images/api-screenshot.png)  
-_(Insert your Postman test screenshots here)_
+<img width="1440" height="900" alt="Screenshot 2025-10-27 at 19 39 02" src="https://github.com/user-attachments/assets/2bc47a20-6335-43f4-b514-2c159fb3524a" />
+<img width="1440" height="900" alt="Screenshot 2025-10-27 at 19 12 05" src="https://github.com/user-attachments/assets/e6ad6b46-ff46-4878-bd45-e59ee5c757e8" />
+<img width="1440" height="900" alt="Screenshot 2025-10-27 at 19 33 39" src="https://github.com/user-attachments/assets/c21799db-3bb9-4974-8a21-0fa6697a1ac9" />
+<img width="1440" height="900" alt="Screenshot 2025-10-27 at 19 36 39" src="https://github.com/user-attachments/assets/d9a94ce2-9847-4fb1-a4af-0db097116525" />
+<img width="1440" height="900" alt="Screenshot 2025-10-27 at 19 37 00" src="https://github.com/user-attachments/assets/963b3461-6567-4caf-b5e6-ee70ddb4c7e4" />
+
 
 ---
 
