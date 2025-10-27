@@ -1,0 +1,2024 @@
+
+================================================================================
+=== start ===
+================================================================================
+
+Created a new file
+Created a new virtual environment inside:
+create .venv
+pipenv install django
+activate Virtual env -> pipenv shell 
+
+Now we can see the list of packages and their dependencies --> pipenv graph
+
+
+-- # Creating new project with Django.
+run --> 'django-admin startproject base .'  (name of the file is base and it will be created in current directory -> ' . ')
+
+- appeared new manage.py
+- appeared new base directory
+
+# manage.py is a main operational file which does administrative tasks
+# for instance it can run Django Server
+# tho server can be ran without this file, this file allows to add some additional settings
+
+
+
+
+================================================================================
+=== launchingDjangoServer ===
+================================================================================
+
+Being in main courses folder run in command line :
+(courses) abdumalik@n3-62-156 courses %  '''python manage.py runserver'''
+
+# server was ran locally on http://127.0.0.1:8000/
+
+If our :8000 port is busy we can run it on a different port with:
+python manage.py runserver 9000 --> (some other port)
+8000 is usually default
+
+# Also it says: Django version 4.0.8, using settings 'base.settings'
+-- We can edit settigns going to base/settings.py
+
+# Also it is saying 18 unapplied migrations which we will learn later
+
+# Let's go to the webpage now:
+- we also have access to 'http://127.0.0.1:8000/admin' our admin page.
+- we will work with it later and will give it username and password later 
+
+
+================================================================================
+=== choosingVirtualEnvironmentinVSCODE ===
+================================================================================
+
+this will give full path to the current virtualEnv for current project:
+'pipenv --venv'
+
+
+
+
+================================================================================
+=== DjangoFiles ===
+================================================================================
+
+db.sqlite3 file has a database for our project DJango, 
+where all of our records will be saved.
+
+# For django by default sqlite3 is used, tho other databases are supported as well.
+
+
+### Let's consider base directory files now:
+# there should appear __pycache__ after a while
+
+
+================================================================================
+=== OverviewOfSettingsofDjango ===
+================================================================================
+
+Lets take a look at  base/settings.py
+
+settings.py is a module - and there is a description on top of it written in docstring.
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+# We wentfrom settings.py out into root Courses directory with  '.parent.parent'
+
+# there in this file we can see variables that are written in a style like this:
+SECRET_KEY ---> it means this variable is created and wont be change throughotu 
+the life cycle of our program STATIC_VARIABLE e.x.
+
+# Also we can see :
+DEBUG = True --> in Django it shows detailed error pages and auto-reloads during 
+development, but it’s unsafe for production.
+ChatGPT said:
+In Django, DEBUG is a setting that controls whether the project runs in development mode or production mode.
+
+# these are the default apps:
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+for instance admin is responsible for localhost:8000/admin page
+In that page theres authentication of user, for that the django.contrib.auth -> Is responsible
+
+* django.contrib.staticfiles is a Django app that helps you manage and serve static files 
+(like CSS, JavaScript, and images) during development and collect them 
+for deployment in production.
+
+-- We will create our apps later
+
+### Middlewares
+In Django, middleware is a layer that processes requests and responses as they pass between the browser and the view.
+It can do things like:
+Check authentication (is the user logged in?).
+Add or modify data in the request/response.
+Handle security (e.g., CSRF protection).
+Manage sessions or cookies.
+👉 Think of middleware as a chain of filters/hooks that run before and after your views.
+
+# ROOT_URLCONF = 'base.urls'
+It is a path to urls.py file which has settings of navigation between pages of our application.
+
+
+# Theres also TEMPLATES list which has a dict.
+That TEMPLATES setting tells Django how to load and render HTML templates for your app.
+BACKEND → defines the engine (DjangoTemplates) used to render templates.
+DIRS → extra folders where Django should look for templates (empty here).
+APP_DIRS → if True, Django will also look inside each app’s templates/ folder.
+context_processors → inject common variables (like request, user, messages) automatically into every template.
+
+
+
+### WSGI & ASGI settings :
+
+WSGI_APPLICATION = 'base.wsgi.application' 
+--->  its a path to a variable in wsgi module
+
+WSGI is --> Web Server Gateway Interface :
+meaning interface of interaction with web servers
+In Django, it’s a standard interface that lets your Django app(python backend) talk to 
+a web server (like Gunicorn, uWSGI, or mod_wsgi in Apache).
+
+flow looks like : Browser → Web Server → Django → Web Server → Browser
+
+# ASGI 
+Asynchronous Server Gateway Interface 
+WSGI → only supports synchronous (request → response) apps.
+ASGI → supports both synchronous and asynchronous code, 
+which means it can handle long-lived connections like WebSockets, 
+chat apps, live notifications, and real-time features.
+
+# By default WSGI is tuned on and ASGI is turned off 
+
+
+## theres also DATABASES dict
+with a key default : {dict}  
+as we see there it is using SQlite3 in BASE_DIR(base directory variable)
+
+When you run Django with ENGINE = 'django.db.backends.sqlite3', 
+Django under the hood uses Python’s sqlite3 module to handle the database.
+So sqlite3.connect() is what Django actually calls internally to open or create db.sqlite3.
+You just don’t call it manually because Django’s ORM and migration 
+system handle it for you automatically.
+
+Think of it like this: Django is a wrapper around sqlite3.connect() 
+(and other database drivers for other engines). 
+You write Python models and migrations, and Django handles all the connect(), 
+queries, and table creation behind the scenes.
+
+
+# AUTH_PASSWORD_VALIDATORS:
+They are for checking password
+
+
+# LANGUAGE_CODE = 'en-us'
+This is language code by default it is   'en-us'
+
+# Time zone : TIME_ZONE = 'UTC'
+
+
+# # Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+STATIC_URL = 'static/'  ---> it is for sending them to web servers
+and making avaialbel for webbrowser
+ 
+
+
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' means that each record 
+in your database tables will automatically get a unique primary key of type 
+BigAutoField if you don’t define one yourself.
+
+
+ALL THESE SETTINGS WILL BE APPLIED AT THE TIME WHEN 
+WE MENTION OUR SETTINGS.PY INSIDE MANAGE.PY HERE:
+
+def main():
+    """Run administrative tasks."""                     |||||||
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'base.settings')
+
+
+================================================================================
+=== RoutingSettings ===
+================================================================================
+
+urls.py ---> is responsible for navigation inside DJANGO apps
+
+--- This code allows us to go to admin page 
+urlpatterns = [
+    path('admin/', admin.site.urls),  
+] 
+
+When we go localhost:8000/admin we get redirected to :
+localhost:8000/admin/login/?next=/admin/
+
+Specifically admin.site.urls itself is resposible for this part our link:
+login/?next=/admin/
+
+
+admin was imported from django.contrib as we see in the urls.py
+
+# If we comment this part : path('admin/', admin.site.urls), 
+we won't be able to get to admins page
+
+
+In case if we change path('admin/', admin.site.urls) into : 
+path('my-admin/', admin.site.urls),
+
+We can now go to admins page via  localhost:8000/my-admin
+
+
+================================================================================
+=== CreatingDjangoApp ===
+================================================================================
+
+# In django we can create many various apps,
+Which we can reuse in many projects in Django.
+
+For instance for internet shop we can : 
+create one app for administrative panel for those who will be processing orders
+and we can resue this app in other Django projects
+
+We can think of Django apps as a separate componnet of one big Prject(app).
+
+Often one project has many apps that work together and from a bigger app.
+And thoe mini apps can be reused in other different apps.
+
+
+### In terminal run:
+   'python manage.py startapp shop'
+* A new dir shop appeared on root directory
+
+
+================================================================================
+=== DifferenceBetweenAPP&Project ===
+================================================================================
+
+# we named our project base because its more visually better:
+
+cuz we call root directory COURSES so that it is:
+
+COURSES --> base(dir with settings), app1, app2, app3
+
+
+================================================================================
+=== OverviewOfApp'sFILES ===
+================================================================================
+
+admin.py :
+registers your models so they can be managed through 
+Django’s built-in admin interface.
+
+apps.py :
+stores the configuration for your Django app (like its name and settings) 
+so Django can recognize and manage it.
+
+class ShopConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'shop'
+
+class ShopConfig(AppConfig): → Defines configuration for the shop app.
+default_auto_field = 'django.db.models.BigAutoField' 
+→ Sets default primary key type to a big auto-increment integer.
+name = 'shop' → Tells Django this app’s name is shop.
+
+default_auto_field is only for the database.
+It decides what kind of ID column (primary key) Django will create if you don’t define one yourself.
+By default, it gives each row an auto-incrementing id.
+
+
+
+models.py :  we should create our modules here
+
+Models are used for working with Databases
+They define the structure of your data (tables and columns).
+They let you create, read, update, delete records using Python instead of SQL.
+They connect your app logic (views) with the database.
+
+# And we dont have to write sql_requests to work with databases that's why
+
+
+tests.py :
+
+tests.py is where you write automated tests for your Django app.
+Purpose: to check if your models, views, forms, etc. work correctly.
+
+views.py : 
+
+views.py is where you put the logic for handling requests and returning responses.
+A view takes an HTTP request → processes it (maybe using models) 
+→ returns an HTTP response (often an HTML page or JSON).
+
+# in views.py we create view functions which:
+takes request and returns result (response)
+anything like text, json, image etc.
+
+
+================================================================================
+=== creatingViewfunc ===
+================================================================================
+
+views.py now loks like this:
+
+from django.shortcuts import render
+from django.http import HttpResponse  # importing HttpResponse class
+# Create your views here.
+
+
+def index(request):     # request that we get from user
+    return HttpResponse('Hello from the Shop App')
+
+# Now we should connect this VIEW_FUNCTION to specific routing for our shop app:
+for this we should create identical file like urls.py in base dir but in shop dir.
+
+urls.py in base ---> is for the whole project
+urls.py in shop --> is for specific app Shop
+
+# Now we have created urls.py in shop
+in this file we should define all the routes for shop app
+
+as we wanted our view function to return text when being in the root page lets 
+implement it like this :
+
+urlpatterns = [
+    path('') # expects from us a route and a view function (route, view)
+]
+
+# '' - empty string means root path for specific app 
+
+
+================================================================================
+=== AddingAppRoutestoProjectRoutes ===
+================================================================================
+
+got urls in base and change 'from django.urls import path' into:
+'from django.urls import path, include'
+
+include('shop.urls') # says django that we want to include all of the routes
+that are in shop.urls into our App so that:
+all of the routes from shop app will be available via address 'shop/'
+
+# now when we go localhost:800/shop 
+
+we can see message: Hello from the Shop App
+
+
+
+
+================================================================================
+=== AvailabilityCheckingofAppInWebInterface ===
+================================================================================
+
+
+
+path('shop/', include('shop.urls'))
+
+this allowed us to call all the routes from shop by shop/ path 
+
+
+================================================================================
+=== ApplyingMigrationsforDatabases ===
+================================================================================
+
+As we remember we had such problem:
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+
+# As we know Django takes all the work of working with Databases on itself
+
+For the correct working of all these apps rom setting.py:
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
+It is required to have tables in database for it to work.
+
+# AS we chekced our database now with DB browser, our database was empty,
+thats why for this reason we are getting this migration error.
+
+# So it means that our database is not yet configured for the apps that were activated by dafult in 
+Django in the list above.
+
+A migration in Django is a file that tells Django how to create or change database tables so they match your models.
+
+# So for this reason we have to apply these migrations, 
+and we dont have to write any SQL requests independently. Django will do it for us.
+We just have to run this commmand : 'python manage.py migrate' to apply unapplied migrations.
+Right now we have 18 of them, for apps: admin, auth, contenttypes, sessions
+
+--# Now going to DB Browser we can see several tables appeared
+
+
+================================================================================
+=== CretingAdministratorAccount ===
+================================================================================
+
+# lets create a superuser:
+'python manage.py createsuperuser'
+asks for Username : lets do for isntance 'abdu'
+email : adalerzdoa2@gmail.com
+password : 12345
+
+# SuperUser is successfully created.
+
+# now using credentials we are in the administrative part of our Django project
+
+# There if for instance we will try to change the password we are gonna be redirected to here:
+http://localhost:8000/admin/password_change/
+this url is given to us by 'path('admin/', admin.site.urls)' from base.urls file.
+
+--- so admin.site.urls continues http://localhost:8000/admin/.
+
+## So from the box Django provide users and groups that are integrated with Sqlite
+
+- For instance, Now we can go to DB browser and there go to table  ' auth_user ' :
+- Here we can see all the users and their info: abdu, ... . 
+
+
+
+
+
+================================================================================
+=== CreatingModels ===
+================================================================================
+
+Lets now create  a model for our shop app
+so that we can interact with database for our app
+
+# lets make one table for categories of courses
+# and the second one for courses
+
+So it will be like one Category can have several courses.
+This is called ONE-TO-MANY relationship
+
+
+#### Models are created with a python class, here we are creating two models(two tables):
+shop/models.py :
+
+from django.db import models
+from django.utils import timezone
+
+# Create your models here.
+                #parent class
+class Category(models.Model):   # Model for a Category
+    # now we indicate what fields will be there in database table
+    #  we do it using attributes of a class
+    title = models.CharField(max_length=255) # Charfield means value will be in 'str' type
+    created_at = models.DateTimeField(default=timezone.now) # date will be generated automatically
+
+class Course(models.Model):
+    title = models.CharField(max_length=255)
+    price = models.FloatField()
+    students_qty = models.IntegerField()
+    reviews_qty = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Foreign key means key from a different table
+# on_delete=models.CASCADE  --> means that when deleting specific category, 
+# automatically the Course instances of it will be deleted as well.
+    created_at = models.DateTimeField(default=timezone.now) # date will be generated automatically
+
+
+# Note that all this was made not writing even a line of SQL request
+
+
+================================================================================
+=== ChangingListofInstalledApps ===
+================================================================================
+
+Go to setting.py in base
+
+In INSTALLED_APPS write new app's path to its configuration file.
+configuration file is apps.py's class, ShopConfig Class of our APP.
+
+so at the end it will look like this:
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'shop.apps.ShopConfig'   # Shop is package, apps is module, ShopConfig is class
+]
+
+
+# Now as we have our models in Shop app, 
+and have included our app inside INSTALLED_APPS in settings.py
+
+Our Task now is to create needed tables inside the DataBase. And we will do it in next lesson. 
+(Prolly by creating migrations)
+
+
+================================================================================
+=== CreatingMigrations ===
+================================================================================
+
+For our Category and Course tables to appear , we should create migrations for our Shop app
+and then we should apply these migrations.
+
+For this let's open Terminal and lets create migrations first
+- As of now if we open migrations folder inside shop we can see that there are no migrations there.
+
+
+Run this for creating migrations for all of the registered APPs for our Project:  
+' python manage.py makemigrations ' 
+
+# we got this message:
+Migrations for 'shop':
+  shop/migrations/0001_initial.py      # migrations file created is : 0001_initial.py
+    - Create model Category
+    - Create model Course
+
+# Now we can  see that in migrations folder there is this  file:   0001_initial.py
+
+Let's open this file and see what is inside it.
+# In here we can see the way of creating various Models in python
+# !!!NOTE!!! that 'id' field gets created automatically in there :
+This particular field is called PRIMARY_KEY.
+
+
+# So after applying these migrations this python code will be turned into sql requests
+which will be executed for database Sqlite3 in our case
+
+
+================================================================================
+=== ApplyingCreatedMigrations ===
+================================================================================
+
+Lets first restart our server.
+
+# Now we again see the migration Alert message in Red:
+
+"""
+You have 1 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): shop.
+Run 'python manage.py migrate' to apply them.
+"""
+
+It says Shop app's migrations need to be applied.
+
+To check, now we have 11 tables in our Project's database.
+
+-- Let's run 'python manage.py migrate' in terminal and the migrations will be applied.
+
+Let's go now to database and update to see if it updated.
+
+---> yes, now we can see that we have 2 more tables : shop_category, shop_course
+making up a total of 13 tables.
+
+- Now for instance we can see that shop_category has 3 fields inside: id, title, created_at
+
+- same is for shop_course
+-- for instance if we take a look at price field's data type we can see that it is 'real'
+ python's float is called 'real' in sqlite
+
+
+## Switching to Browse Data we can notcie that these two tables are empty.
+
+
+#/////# So now we Successfully have our Database Tables Because we created and applied migrations 
+
+
+================================================================================
+=== Editing(Changing)Models ===
+================================================================================
+
+Let's try to make some changes in model Course
+
+Specifically let's change title = models.CharField(max_length=255) into:
+max_length = 300
+Save file 
+
+-- let's now go again to terminal and create migrations again because our model got changed,
+but in database there is old data max_length=300 :
+
+Create migrations running :  python manage.py makemigrations
+- now we can see that a new migration appread in migrations folder
+new migrations file is : 0002_alter_course_title.py
+--Also we can see message description in terminal  - 'Alter field title on course'
+
+
+# Inside 0002_alter_course_title.py :
+we see that there is a list of dependencies, that says Django that current migration
+depends on the list dependensies:
+
+    dependencies = [
+        ('shop', '0001_initial'),
+    ]
+Specifically 0001_initial.
+
+### And after we see operations code to be made for this migrations 
+Specifically:
+
+    operations = [
+        migrations.AlterField(
+            model_name='course',
+            name='title',
+            field=models.CharField(max_length=300),
+        ),
+    ]
+
+migrations.AlterField --> change specific field for course model, particularly
+'title' field, and there we want to change the max_length to 300.
+------
+Now let's apply this migration with:
+' python manage.py migrate '
+
+Yes, now going to DB Browser we can see that the value changed from 255 to 300.
+
+
+!!!  It is important to plan the look of datbase before creating the database, 
+because for instance  if we are changing the type of field from flaot to int,
+if there are already values in there, we will face issues 
+
+
+# Now our databases are up to date and all of the migrations are applied.
+
+
+================================================================================
+=== CreatingCategoriesviaModels ===
+================================================================================
+
+Let's now using terminal create records in tables based on Category and Course models
+
+Run on terminal: 'python manage.py shell'
+This will take us to the shell, where we have access to models(the ones we created) 
+with which we can interact with database.
+
+# here in this shell we have access to all packages and modules in our python app
+- we have a shop package, adn there is a model.py module,
+and from this module we can import Category and Course.
+These are the models for interaction with Database.
+
+-- The corresponding tables in database are created via migrations,
+that's why using these models we now can create records in databases.
+
+Run: 'from shop.models import Category, Course'
+Now we have access to classes(models) Course and Category.
+
+let's run: 'Course.objects.all()' --> with this syntax we can get all course records from Database
+we got : <QuerySet []>  --> empty sequence, which is instance of a QuerySet class.
+
+do same for Category: 'Category.objects.all()'
+we got :  <QuerySet []> 
+
+--- This means that in our database we dont have any records based on Category and Course tables.
+
+----> Let's create a Category record with this syntax:
+1. we craete a new variable and give all of its field values as arguments (Category has 2 fields:
+ title, created_at) , but created_at already has a default value (default=timezone.now)
+ If you indicate created_at, Django saves your value; if not, it uses the default timezone.now.
+ Also Priamry_key ID will be created by itself too.
+
+ SO In Terminal run :   'new_category = Category(title='Programming')'
+
+2. Now we should call 'save()' method for new_category object.
+run:  'new_category.save()'
+
+/=/=/ Now category record was saved in Database successfully.
+
+- Now let's run a command to get all of the values from Category table in database again:
+run : 'Category.objects.all()'
+now we got : <QuerySet [<Category: Category object (1)>]>
+
+-- Now let's see if we can access the Name and the ID of the Category record(instance) : 
+run: 'new_category.id'
+got (it's ID): 1 
+
+run: 'new_category.title'
+got : 'Programming'
+
+run: 'new_category.created_at'
+got : 'datetime.datetime(2025, 9, 3, 17, 46, 38, 472612, tzinfo=datetime.timezone.utc)'
+
+### Also it is possible to access the fields from the QuerySet, but you need to iterate or index it:
+it will look like this:
+
+category = Category.objects.all()[0]
+print(category.id)      # 1
+print(category.title)   # Programming
+
+or it can look like thsi if we iterate:
+for c in Category.objects.all():
+    print(c.id, c.title)
+
+
+#### Now let's try to find a Category based on specific ID.
+run : 'Category.objects.get(pk=1)'     # pk named argument means primary_key
+got: <Category: Category object (1)>  # we got result from database
+-- we can get access to its ID now:
+run: Category.objects.get(pk=1).id
+got: 1
+run : Category.objects.get(pk=1).title
+got : 'Programming'
+run: Category.objects.get(pk=1).created_at
+got : datetime.datetime(2025, 9, 3, 17, 46, 38, 472612, tzinfo=datetime.timezone.utc)
+
+-- Or for instance if we know other filed than ID, we can do like this:
+run : Category.objects.get(title="Programming").id
+got : 1
+run : Category.objects.get(title="Programming").created_at
+got : datetime.datetime(2025, 9, 3, 17, 46, 38, 472612, tzinfo=datetime.timezone.utc)
+
+
+#### Also we can use filter instead of get like this:
+run: Category.objects.filter(pk=1)
+got: <QuerySet [<Category: Category object (1)>]>
+run: Category.objects.filter(title='Programming')
+got: <QuerySet [<Category: Category object (1)>]>
+
+
+================================================================================
+=== CreatingCoursesinCategories ===
+================================================================================
+
+Let's now add a Course into Category record - 'Programming' :
+
+1. first create a category variable and assign it a result of calling get:
+run : category = Category.objects.get(id=1) 
+same as:  category = Category.objects.get(pk=1)
+
+2. Now for this category we can add a course :
+run : category.course_set.all()   # course is a name of a model, djagno automatically created 
+course_set object when we did: 'category = models.ForeignKey(Category, on_delete=models.CASCADE)'
+when defining Course model in models.py
+Django automatically gives the reverse relation on the Category side. 
+By default, this reverse relation 
+is named <modelname>_set — so since your model is Course, you get course_set.
+category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="courses") <-- here at the end.
+And use it later like:
+category.courses.all()
+
+Since Course has category = models.ForeignKey(Category, ...), Django automatically makes a way to go backwards:
+	•	From a Course, you access its category with course.category.
+	•	From a Category, you access all related courses with category.course_set.
+
+- As from step 1 the category variable is now the Category object with primary key 1. 
+category.course_set.all() gives you all Course objects linked to that category through the ForeignKey.
+
+
+So now let's actually call that 'category.course_set.all()' without talking too much:
+run:  category.course_set.all()
+got : <QuerySet []>
+# As we see, now in Category table(ID=1 ->'Programming') there are no courses in it.
+
+# Let's add a course into this category.
+# we should give all values for fields of our adding course here code:
+the created_at will be passed automatically, 
+category will be added automatically since we are creating a course for specific category
+so we should pass only: title, price ,students_qty, reviews_qty.
+
+So run: run : category.course_set.create(title="Complete Python Guide", price=99.99,students_qty=100,reviews_qty=50)  
+got:  <Course: Course object (1)>    # means new course was successfully created
+# that 1 that we see is the primary key ID of the new Course record created.
+
+/=/ Now check the Course records:
+run :  Course.objects.all()    # Like we did in previous lesson for category 'Programming'
+got : <QuerySet [<Course: Course object (1)>]>
+
+# It means that we successfully created a Course record from category Class using:
+category.course_set.create(title="Complete Python Guide", price=99.99,students_qty=100,reviews_qty=50)
+
+# Right now we created a course from category.
+## But there are a total of 2 ways of creating a record in Course 
+(one from Course side, and one from Category side) :
+
+//////// 1.	From the Category side (one → many):
+
+category = Category.objects.get(pk=1)
+
+category.course_set.create(
+    title="Complete Python Guide",
+    price=99.99,
+    students_qty=100,
+    reviews_qty=50
+)
+
+//////// 2.	From the Course side (many → one):
+category = Category.objects.get(pk=1)   # get a Category instance
+
+course = Course.objects.create(
+    title="Complete Python Guide",
+    price=99.99,
+    students_qty=100,
+    reviews_qty=50,
+    category=category   # pass the Category instance explicitly
+)
+
+# As we know we can find specific course by its Primary_key:
+run: Course.objects.get(pk=1)
+got: <Course: Course object (1)>
+
+# Now going to DB browser we can see that we have a new record in Courses table.
+
+
+Let's create another course record:
+run: category.course_set.create(title="Complete Java Guide", price=99.99,students_qty=80,reviews_qty=20)
+got : <Course: Course object (2)>  # id=2
+
+### Let's check :
+run: Course.objects.all()
+got : <QuerySet [<Course: Course object (1)>, <Course: Course object (2)>]>
+run : Course.objects.get(id=2).title
+got: 'Complete Java Guide'
+
+# we also can iterate over  QuerySet object that we get from Course.objects.all():
+let's for instance print out only the names of the courses via iteration:
+run: print([course.title for course in Course.objects.all()])
+got: ['Complete Python Guide', 'Complete Java Guide']
+
+
+So Two ways of accessing DATA:
+
+//// 1 ////
+category = Category.objects.get(id=1) 
+category.course_set.get(id=1).title     # acessing the records course_set info since its linked to Courses.
+//// 2 ////
+Course.objects.get(id=1).title
+
+
+
+#### SO ALL THESE WAS MADE USING MODELS, WE DIDNT USE SQL REQUESTS AT ALL. ####
+
+
+# let's go out of interactive shell:
+run: quit()
+
+In the next lesson let's see how we can view information from database to adminstrative panel
+in web interface of our project.
+
+
+================================================================================
+=== AddingMagicMethod__str__intoModels ===
+================================================================================
+
+So even going to Courses --> Course object (2) there in 
+Category:(field)   we see  Category object(1)
+
+The two non-clear things are Course object(2) and Category object(1) 
+it would be great to name them Java... and Programming respectively.
+
+For this let's go back to models.py in shop and for Category class
+let's add magic Method __str__.
+
+
+•In Django admin page in Webbrowser, whenever it needs to list objects 
+(for example in dropdowns, tables, or foreign key selectors), 
+it internally calls str(obj) on each model instance.
+--> and it triggers __str__() magi method.
+
+So basically in web interface Django does print(object)
+and thsi thing calls __str__()
+But by default it is just like - Course object(1)
+
+Let's do the same thign for Courses.
+
+# Now everywhere we go we can se normal titles instead of thigns like :
+Course object(2) and Category object(1) 
+
+
+ALSO 
+actually in this magim method we can return anything for instance instead of title :
+self.title + ' ' +  str(self.student_qty)
+
+    def __str__(self):
+        return self.title + ' ' +  str(self.student_qty) 
+
+        # we converted into str since it was and integer 
+
+So that now we see in web interface things like : Complete Java Guide 80
+
+
+# Let's add a new course in Web Interface
+- add course and write evrything manually
+- save
+---> yeah nwo we got a new record , and there are total of 3 records as of now.
+
+
+########
+So now, in the next lesson we are going to view(display) courses in web-interface for  
+specifically our shop app(http://localhost:8000/shop/).
+
+For now if we go to http://localhost:8000/shop/, 
+it only displays this message:
+Hello from the Shop App
+
+Instead of this we want to see a table will all of the Courses.
+
+
+================================================================================
+=== ViewingCourseNamesInWebPage ===
+================================================================================
+
+As we did a lot for our Django app,
+Now it's time not to only display text 'Hello from the Shop App',
+but rather a list of courses for instance.
+
+As we remember, Views in Django are responsible for the 
+thing that is displayed in user interface
+
+views.py of our shop app added a function called  index().
+We called it index becasue it processes user's request which comes for the main page 
+of our shop App
+
+•	The name index is just a convention (like “home page”), not a strict rule.
+
+As of nwo we are jusut returning :
+return HttpResponse('Hello from the Shop App') in views.py index() function.
+
+As now we have courses in our database we can views them for our user,
+that means returning the list of titles of courses instead of this line:
+Hello from the Shop App.
+
+Let's do it:
+to be able to read data from database we should import model Course(class)
+ which is located in models.py
+
+Now using this Course model we can access all courses from database,
+the same way as we did it in Django Shell
+
+using : courses = Course.objects.all()
+now it looks like this:
+
+def index(request):     # request that we get from user
+    courses = Course.objects.all()
+    return HttpResponse(courses)
+
+got : 'Complete Python GuideComplete Java GuideComplete JavaScript Guide' in webInterface
+We got the titles of courses since we added __str__ magic method for our model (Class).
+
+For instance if we comment this in models.py:
+    def __str__(self):
+        return self.title
+
+we are gonna get this in webInterface:
+'Course object (1)Course object (2)Course object (3)'
+
+
+Overall we have such code for views.py:
+
+from django.shortcuts import render
+from django.http import HttpResponse  # importing HttpResponse class
+# Create your views here.
+# means in current file we want to find module called models.py
+from .models import Course
+# and import Course from there
+# Without the dot, Python (not Django) searches from the project root where
+# manage.py runs, so it skips your app folder.
+
+
+def index(request):     # request that we get from user
+    courses = Course.objects.all()
+    # every object of courses will be converted to str cuz the __str__ is implemented for Model Course
+    # return works cuz HttpResponse sends raw text, and the browser interprets it as HTML/JS.
+    return HttpResponse('<br>'.join([str(course) for course in courses]))
+    # same thing:
+    # return HttpResponse(''.join([str(course) + '<br>' for course in courses]))
+# now to list the courses line by line instead of a one row,
+# let's use a tag called <br>
+# let's do it using ''.join()
+# remember that join works only with strings
+# we could do list(courses) but it wouldn't trigger str directly we would have to call it again
+
+
+# Let's click right button of mouse and click view page source.
+
+
+# In our case we used HTML tags like <br>
+but if we want to use a lot of such tags it can be arduous for us.
+
+So For This Purpose We Have Templates.
+Next we are gonna create Html Template in next lesson
+
+and let's leave it like this for now :
+
+def index(request):     # request that we get from user
+    courses = Course.objects.all()
+    # every object of courses will be converted to str cuz the __str__ is implemented for Model
+    return HttpResponse(courses)
+
+
+================================================================================
+=== UsingDataFromDataBaseInTemplates ===
+================================================================================
+
+# In render function we can give third argument called context,
+and the value for this should be in mapping format meaning:
+key:value pairs , so for this we can use a dictionary.
+
+And in thi dict we can pass key 'courses' with a value courses like this:
+
+def index(request):     # request that we get from user
+    courses = Course.objects.all()
+    # django will search courses.html inside the templates sub-directory that we created
+    # we are passing courses sequence to render as 3rd argument
+    return render(request, 'courses.html', {'courses': courses})
+
+
+# Now go to courses.html template:
+this document is not just an html document, it is a Django template:
+and in Django Templates we can use python code and also access some data and variables from there.
+
+it means that now, in our template djnago we have access to a variable courses.
+
+Now, how to access variables in Django Template:
+--> we can do this using two pairs of '{}' brackets like this in courses.html:   {{courses}} 
+
+-> but as we see in courses.html this part of our code doesnt get colored in VScode
+---> to see where we have python code in html, we need to install extension for Django,
+it is called 'django'.
+
+------> Exactly now after installing it, we can see that python part of our code,
+is lighting up with a different coloring.
+It means that now , we are working with Django Template.
+This way we can refer to variables that we pass to a Django Template.
+
+# Now for each course from our database, we should create a separate row in the table
+in web interface:
+one row looks like this in html:
+
+        <tr>
+            <td>My course</td>
+            <td>Programming</td>
+            <td>49.99</td>
+            <td>200</td>
+            <td><button>Buy</button></td>
+        </tr>
+
+# We can also implement this in Django Template by iterating over courses sequence.
+
+---> So as we used {{}} in Djnago templates, there is also thing like:
+{%  %}
+
+So overall:
+• while {{ ... }} is for outputting values (like variables).
+• We use {% ... %} for logic (like loops, conditions, including files, etc.), 
+!!! note that if we opens a block of code (loop, condition, block), 
+it needs an end. If it’s a single instruction, it doesn’t.
+
+To end we write things like: 
+{% endfor %} ---> for   for loops
+{% endif %}  ---> for   conditions 
+
+
+so that now our tempalte looks like this:
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Students Quantity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in courses %}
+        <tr>
+            <td>My course</td>
+            <td>Programming</td>
+            <td>49.99</td>
+            <td>200</td>
+            <td><button>Buy</button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+Now insde our For Loop, we have access to a variable 'course'.
+So that now we can refer to its data fields: with {{course.title}}
+
+# now it looks like this:
+
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <td>{{ course.title }}</td>
+      <td>{{ course.category }}</td>
+      <td>{{ course.price }}</td>
+      <td>{{ course.students_qty }}</td>
+      <td><button>Buy</button></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+Let's save it and see, what we get in web Interface:
+Yeah we see full table with data from our DataBase.
+
+
+Now let's try to go to Admin panel in a separate browser tab,
+and from there create a new Category "Marketing" and a new course "Complete Marketing Guide"
+
+--- AAAND WOALLYA ----> It appeared in our SHOP page.
+
+
+But, for now our table is not looking that much of appealing, 
+so that let's next add an External Library BootStrap using 
+which we can easily and quickly design various html elements.
+
+#####
+But before that we will look at the connection between layers in Django Apps.
+
+
+================================================================================
+=== CreatingHTMLtemplates ===
+================================================================================
+
+Let's create a separate HTML template in a separate file.
+And then use it to return result to our client.
+
+Let's go to SHOP dir and create a sub Directory called templates
+- and here create a new template called courses.html
+
+Let's in this HTML document create an html table:
+we can write it all manually but let's write it with 
+Emmet abbreviation, a shorthand that expands into full HTML code:
+
+write : "table>(thead>tr>th*5)(tbody>tr>td*5)" and click TAB.
+and it will generate needed table
+
+Let's for now fill the Table Manually, 
+and also add one button in second row called "Buy"
+-save file
+
+
+# Now we should use this HTML template in Views.py:
+- as we see there is already import of a function called 'render'  
+from module called shortcuts
+--> using this render func we can return answer to our user based on specific template 
+that's why instead of HttpResponse return in our index,
+let's return the result of a render() function.
+--> and the first argument of render() is 
+request - a request from client that we get in index(request)
+
+!Remember that every View function receives request from user and returns a result.
+so it's mandatory for every view function to have argument called request.
+
+--> the second argument is a name of our template file in string format:
+# django will search that file automatically inside the templates sub-directory that we created.
+...
+
+S0 now our views.py looks like this:
+
+from django.shortcuts import render
+from django.http import HttpResponse  # importing HttpResponse class
+# Create your views here.
+# means in current file we want to find module called models.py
+from .models import Course
+# and import Course from there
+# Without the dot, Python (not Django) searches from the project root where
+# manage.py runs, so it skips your app folder.
+
+
+def index(request):     # request that we get from user
+    courses = Course.objects.all()
+    # django will search courses.html inside the templates sub-directory that we created
+    return render(request, 'courses.html')
+
+# A request is the HttpRequest object containing all details of the user’s HTTP call,
+# triggered whenever the browser visits a URL
+# The request in a view is always the HttpRequest object (not the button),
+# carrying data sent by the browser.
+
+
+#Let's save it and see the result in browser.
+
+- Yes, we can now see the HTML table that we created in courses.html file.
+
+# now opening page source we see that code for table that we wrote.
+
+
+#### Next let's see how we can fill this table up with our Course Data from
+our database.
+and since we already have 
+'courses = Course.objects.all()'   -->  we can use it for this purpose.
+
+
+================================================================================
+=== ConnectionBetweenLayersInDjangoApps ===
+================================================================================
+
+# before styling html Template in Django,
+let's rebiew the MTV thing we have a screenshot in this dir called 'DjangoLayers.png'.
+
+
+.. take notes from video + take notes from GPT last tab 
+
+So the process is like this : 
+
+DB --> MODEL --> VIEW --> TEMPLATE   
+
+(and if it's done backwards it's called POST request 
+ that triggers a Create operation in the cycle.)
+
+ it will look like:
+
+ TEMPLATE --> VIEW --> MODEL --> DB
+
+ Views are interchangers between models and templates.
+
+ Also there are URL's and, variour view functions are connected to various URL's liek here:
+
+ urlpatterns = [
+    # expects from us a route and a view function (route, view)
+    path('', views.index, name='index')
+]
+
+
+Overall, Template talks to Model via View function
+View function talks to Database via Model.
+
+
+
+
+================================================================================
+=== ConnectingStylingLibraryBOOTSTRAP ===
+================================================================================
+
+For styling web-pages we need CSS styles.
+And we can basically create a separate CSS file for our project, 
+but for making process fast, let's use 
+A ready library Bootstrap.
+
+Let's google Bootstrap, and there download it
+got to CDN via jsDelivr.
+from there we need the first link:
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+We dont need js file so only copy first line.
+
+Now go to templates/courses.html 
+and in the firstt line before <table> let's add a Header of html document
+
+<head>  ...here... </head>
+
+and put the link into is place  ...here...
+
+save and go back to our Shop interface page browser 
+and refresh it.
+
+NOW, we see that some styles were applied to our page
+
+
+### And now we can add some classes for our table and those classes 
+are already included in bootstrap Library
+
+
+Let's go back to our .html and for html tag <table> let's convert it into this:
+
+<table class="table mt-5 table-border table-striped table-hover">
+
+In here :
+•	table → Applies Bootstrap’s base table styling (padding, borders, font alignment).
+•	mt-5 → Adds a top margin (mt = margin-top, 5 = spacing size). It pushes the table down from elements above it.
+•	table-bordered →   to show borders around all table cells.
+•	table-striped → Adds zebra-striping (alternating row background colors).
+•	table-hover → Highlights a row when the user hovers over it.
+
+
+So here how .html gets imported library:
+
+•	That <link> tells the browser: “Go fetch this CSS file from the Bootstrap CDN (a public server).”
+•	The CSS file is all of Bootstrap’s styles bundled together (thousands of predefined classes).
+•	Once the browser downloads it, all the .table, .btn, .mt-5, etc. styles are available in your page.
+•	So when you write <table class="table mt-5 table-striped">, the browser checks its active stylesheets, finds those classes in the Bootstrap file you linked, and applies them.
+
+
+
+NOW, going back to our page we see beautiful table there.
+
+LEt's also change the style for a header of our page and make it Darker.
+
+
+For this we should add an HTML tag class in <thead> and it will look like this:
+  <thead class="table-dark">
+
+Yes now we see the first row(thead) is dark.
+
+
+Also let's add styles fro the buy buttons:
+
+<button class="btn btn-primary">Buy</button>
+
+YEAH , NOW IT CHANGED into blue color!
+
+
+
+SO Basically here is exactly what happens with classes : 
+
+The class attribute in HTML is just a label you attach to an element.
+CSS (or libraries like Bootstrap) define styles for those class names.
+When the browser sees class="table mt-5", it looks up all matching styles and applies them together.
+You can list multiple classes separated by spaces, and their styles will be combined.
+In our Case Bootstrap is loaded from CSS file located in some server.
+
+
+IN BOOSTRAP SITE WE CAN ALWAYS GO TO EXAMPLES PAGE AND ALSO SEE THE DOCUMENTATION
+ON USING VARIOUS STYLES.
+
+FOR instance if we go to images documentation we can see how we can style 
+various images using bootstrap
+
+
+Next, we will talk about how we can use one common Template,
+for instance which has MENU on top of the page for other different Templates.
+
+In other words the way we can include one template into the other one.
+
+👉 In plain words:
+•	Instead of writing the same code (like a menu bar, header, footer) 
+inside every HTML file, you can make one common template that has those shared parts.
+•	Then, other templates (like your product page, courses page, etc.) 
+can include or extend that common template.
+
+THIS ALL IS MADE POSSIBLE THANKS TO DJANGO.
+
+also to note:
+We put the Bootstrap link in <head> so the page knows the styles first, 
+and everything shows up nicely styled right away.
+
+
+
+
+================================================================================
+=== CreatingBaseHTMLtemplate ===
+================================================================================
+
+Creating a base common Template:
+
+•	Instead of writing the same code (like a menu bar, header, footer) 
+inside every HTML file, you can make one common template that has those shared parts.
+•	Then, other templates (like your product page, courses page, etc.) 
+can include or extend that common template.
+
+THIS ALL IS MADE POSSIBLE THANKS TO DJANGO.
+
+Usually in most of the webpages there is a base-common parts of the page for the most of the pages.
+For instace, a header which shows a menu of buttons login and logout.
+And for these cases it is very practical to create an html template
+that will be reused in various other pages.
+
+Doing so, in our table case we can take this table into other pages as well.
+
+
+-- That's why let's create a new Template and call it base.html .
+- let's create an html document with Emmet shortcut:
+write : '!' and click tab
+
+it didnt work cuz vscode is taking our file format as "Django HTML"
+
+to fix this lets change the settigns of vscode.
+now, open settings as json file 
+and in the end of the settings add this line:
+
+  "emmet.includeLanguages": {
+    "django-html":"html"
+  }
+
+
+-- now again : ! and Tab
+it worked.
+
+
+we got :
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+Now, again go to courses.html and copy the Bootstrap library link:
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous"
+  />
+
+and put it in header of base.html, so that Bootstrap will be available for 
+all pages and will come from base.html  .
+
+let's delete the header in courses.html , since we will be getting the bootstrap link from our 
+base.
+
+
+For now let's not touch the Title of our base.
+But inside body, let's  add this thing :
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}   <!--> we need this block to include other pages -->
+    </main>
+
+Why inside <body>
+
+Everything that should actually appear on the webpage goes inside <body>. The <head> is only for metadata (title, CSS links, scripts, etc.). Since the block will output visible content (like text, tables, images), it belongs in <body>.
+
+Why wrapped in <main>
+	•	<main> is an HTML5 semantic tag that marks the primary content area of the page.
+	•	It tells browsers, screen readers, and search engines: “This is the main unique content of this page.”
+	•	Things like navbars, sidebars, and footers are outside <main>.
+	•	By putting {% block content %} inside <main>, you’re saying: “Every child page will insert its unique main content here, inside a clean Bootstrap container.”
+
+--> this thing is called Django template block.
+
+
+What it does:
+•	It defines a placeholder (a block) inside your base.html.
+•	Other templates (like courses.html, products.html, etc.) that extend base.html can put their own HTML inside this block.
+•	When Django renders the page, the block is replaced with the content from the child template.
+
+let's save our base.html file
+and go to courses.html
+
+
+
+----/ NOW in courses.html we have to indciate the name of 
+the template in which our courses.html will be added to.
+
+So for this on top of the courses.html file write:
+
+{% extends 'base.html'%}
+
+- also besides this we should indicate 
+which part of the courses.html
+will be included in here:
+        {% block content %}
+        {% endblock %} 
+
+btw we can name it anything we want even :  {% block my-content %}
+
+SO that our final courses.html will look like this :
+
+
+OVERRALL :
+The space between {% block %} and {% endblock %} in the base template 
+doesn’t matter—Django replaces it entirely with the child template’s content.
+
+
+Let's go to Page source, and we see this code successfully being included:
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main class="container">
+      <!--container adds spaces from left and right of object(BootStrap)-->
+      
+
+<table class="table mt-5 table-bordered table-striped table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Students Quantity</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>Complete Python Guide</td>
+      <td>Programming</td>
+      <td>99.99</td>
+      <td>100</td>
+      <td><button class="btn btn-primary">Buy</button></td>
+    </tr>
+    
+    <tr>
+      <td>Complete Java Guide</td>
+      <td>Programming</td>
+      <td>89.99</td>
+      <td>80</td>
+      <td><button class="btn btn-primary">Buy</button></td>
+    </tr>
+    
+    <tr>
+      <td>Complete JavaScript Guide</td>
+      <td>Programming</td>
+      <td>59.99</td>
+      <td>200</td>
+      <td><button class="btn btn-primary">Buy</button></td>
+    </tr>
+    
+    <tr>
+      <td>Complete Marketing Guide</td>
+      <td>Marketing</td>
+      <td>99.99</td>
+      <td>50</td>
+      <td><button class="btn btn-primary">Buy</button></td>
+    </tr>
+    
+  </tbody>
+</table>
+
+      <!-- we need this block to include other pages -->
+    </main>
+  </body>
+</html>
+
+
+================================================================================
+=== AddingMainNavigationalBlock ===
+================================================================================
+
+# Let's add a navigatioanl block on the top of our base template,
+so that it will be available for all of our pages.
+
+-let's go to bootstrap page 
+add go through docs of NavBar.
+Now we won't do this but rather will create our own basic one.
+
+For now in base.html let's add simple navbar with Emmet Abreviature type:
+
+  <body> <!--added navbar inside body first-->
+    nav.navbar.navbar-dark.bg-dark
+    <main class="container">
+      <!--container adds spaces from left and right of object(BootStrap)-->
+      {% block content %} {% endblock %}
+      <!-- we need this block to include other pages -->
+    </main>
+  </body>
+
+  this : nav.navbar.navbar-dark.bg-dark
+
+  and click TAB , so we got the code like this created by Emmet:
+
+    <nav class="navbar navbar-dark bg-dark"></nav>
+
+Now inside <nav> ...here... </nav> :
+
+add   div.container and click TAB
+
+now inside created dir add : a.navbar-brand and TAB
+
+ <a href="" class="navbar-brand"></a>
+
+For now leave href="" value empty we will add a link later.
+
+Now add 'Courses Shop' like this:
+<a href="" class="navbar-brand">Courses Shop</a>
+
+In future when clicking 'Courses Shop' we will be able to go to 
+our main page of our shop app via views index function
+
+Now let's save base.html and refresh the page
+
+Yeah it worked we see Courses shop
+
+
+
+In next lesson let's create a page for information of specific course,
+and make so that the names of our courses
+in courses table will be links to those pages.
+
+
+================================================================================
+=== AddingRouteforOneCourse ===
+================================================================================
+
+for now we have 2 templates: base.html , and courses.html.
+base being the main template.
+
+let's create a page for information of specific course,
+and make so that the names of our courses
+in courses table will be links to those pages.
+
+
+And let's make such a structure for these pages:
+http://localhost:8000/shop/1   --  will be link to python course  (1 is ID of the course)
+http://localhost:8000/shop/2  and etc ...
+
+
+For navigation ofcourse we will have to make a routing between the main index page 
+and other separate pages of courses.
+
+Let's start it from adding a new route in url.py file which will allow us to go to a 
+separate page of a specific course.
+
+!!!!!!
+we agreed that we will get course object information from the ID indicated in the url 
+link  for instance :  http://localhost:8000/shop/2 .
+
+
+Let's go to urls.py and add a new routing:
+--------------
+from django.urls import path
+from . import views   # '.' means current directory (package)
+
+urlpatterns = [
+    # expects from us a route and a view function (route, view)
+    path('', views.index, name='index')
+    # since we will use this ID later we should do it like this '<int:course_id>'
+    path('<int:course_id>', views.single_course, name='single_course')
+]
+---------------
+
+<int:course_id> captures an integer from the URL 
+and passes it as the variable course_id to the view function as an argument
+
+
+
+In next video we will create a ViewFunction for course page.
+
+
+================================================================================
+=== CreatingViewFunctionForCoursePage ===
+================================================================================
+
+If your URL pattern has <int:course_id>, then your view must accept course_id.
+If you change it to <int:id>, your view must also use id.
+
+View func will look like this:
+
+def single_course(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    return render(request, 'single_course.html', {'course': course})
+
+Next we will create single_course.html
+
+
+================================================================================
+=== CreatingTemplateForCoursePage ===
+================================================================================
+
+create single_course.html in templates.
+
+fill everything urself and using <h1 h2 or p> in html add info about the course:
+get these : title, category, price, students_qty, reviews_qty.
+
+lower also add:
+button.btn.btn-primary and click TAB
+
+and there write "buy" : <button class="btn btn-primary">Buy</button>
+
+
+So that now it looks like:
+
+
+{% extends "base.html" %} 
+
+{% block title %}
+ {{course.title}}
+{% endblock %}
+
+
+{%block content %}
+
+<h1>Course title: {{course.title}}</h1>
+<h2>Category: {{course.category}}</h2>
+<p>Price: {{course.price}}</p>
+<p>Students Quantity: {{course.students_qty}}</p>
+<p>Reviews Quantity: {{course.reviews_qty}}</p>
+<button class="btn btn-primary">Buy</button>
+{% endblock %}
+
+
+
+================================================================================
+=== CheckingPageofASeparateCourse ===
+================================================================================
+
+we implemented routing and created new pages with Sending
+ ID dynamically so that we now have access for these all:
+
+http://localhost:8000/shop/1
+http://localhost:8000/shop/2
+http://localhost:8000/shop/3
+http://localhost:8000/shop/4
+
+
+To make it look beautiul template let's alsso add a bootstrap tag to <h1>:
+class="mt-5"
+
+
+If we want we can also make this page look more beautiful by using bootstrapand finding there doc
+named Card.
+
+
+
+But when we go to http://localhost:8000/shop/10:
+it will give Error and it is a better practice to return page 404 in here.
+
+Let's do this in the next video.
+
+
+
+
+================================================================================
+=== Viewing404PageWhenThereisNoSuchCourseInDataBase ===
+================================================================================
+
+We should make some changes into single_course view function to handle cases
+when there is no such a course in the Database.
+
+ now make it look like : 
+
+
+def single_course(request, course_id):
+    try:
+        course = Course.objects.get(pk=course_id)
+        return render(request, 'single_course.html', {'course': course})
+    except Course.DoesNotExist:     # an error class : Course.DoesNotExist
+        raise Http404()  # should first import it
+
+
+----
+We can check that server really returns us code 404 by right click and Inspect Element:
+
+go to Network, go to Headers and we see :
+
+Status Code: 404 Not Found
+
+Now go to this link and see:
+http://localhost:8000/shop/3
+
+we get there : --->   Status code: 200 OK 
+meaning page was successfully found and gave to a client .
+
+
+
+Now let's do the same functionality but without a Try Catch Block.
+
+for this: from shortcuts import get_object_or_404 . 
+
+this function inside itself already includes generation of mistakes in case
+if there is no object in DB 
+
+--- Now instead of getting our object from database with get we will
+access it with get_object_or_404.
+
+get_object_or_404  expects from us 2 arguments , a name of Model and teh second is the searching object.
+
+it looks like this :
+
+    # OPTION 2
+    course = get_object_or_404(Course, pk=course_id)
+    return render(request, 'single_course.html', {'course': course})
+
+
+Now in broser we even see this text in 404 page:
+No Course matches the given query.  --- thanks to get_object_or_404.
+
+
+================================================================================
+=== SettingRoutingBetweenPages ===
+================================================================================
+
+for our shop now we have 2 routes, one is for main page of shop via index viewFunction 
+and the other one is a route that takes us to the specific page of a course.
+
+Now it's time to set up the navigation between these two routes:
+meaning we should create linkes inside each of these to take to each of them.
+
+for this let's go to our main page courses.html and for names of courses
+put them inside anchored links with <a> tag in html
+
+for this put 'a' and click TAB
+and put {{ course.title }} inside <a>
+
+finally make it look like this:
+
+<a href="{{course.id}}">{{ course.title }}</a> 
+
+!!!important!!!
+href="1" is a relative URL, so the browser appends it to the current path (e.g., /shop/ → /shop/1).
+
+
+We can also make it like this:
+<a href="/shop/{{course.id}}">{{ course.title }}</a>  --- absolute path
+
+but this last version would result in errors if we would change from base urls.py 
+the 'shop' name to something else
+
+
+So Overall there are 3 methods of implementing Routing:
+
+1. Relative path
+<a href="{{course.id}}">Link</a>
+	•	Browser appends 1 to the current page’s URL.
+	•	Works only if you’re already inside /shop/ or /courses/.
+	•	❌ Breaks if template is used on another page (e.g. /about/ → /about/1).
+
+2. Absolute hardcoded path
+<a href="/shop/{{course.id}}">Link</a>
+	•	Always points to /shop/1.
+	•	Doesn’t depend on current page.
+	•	❌ Breaks if you rename the prefix in urls.py (e.g. change /shop/ → /courses/).
+
+3. Django dynamic path
+<a href="{% url 'single_course' course.id %}">Link</a>
+	•	Django looks up the URL pattern by name (single_course).
+	•	Builds the correct absolute URL (/shop/1 or /courses/1) automatically.
+	•	✅ Most flexible — never breaks if prefixes change in urls.py.
+
+
+    SO the best versions is the third one.
+
+
+================================================================================
+=== RoutingUsingRouteNames ===
+================================================================================
+
+The other way we can manage routing is by using route names:
+
+by route names I mean names that we gave them in urls.py :
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('<int:course_id>', views.single_course, name='single_course')
+]
+
+Those were the names that we assigned to those specific pathes,
+so that now we can refer to those pathes via their names.
+
+Our Anchor Text will look have a syntax like this :
+
+ <a href={% url 'single_course' course.id %}>{{ course.title }}</a>
+
+ --- we pass 'course.id' cuz our path expects an argument in here :
+
+ path('<int:course_id>', views.single_course, name='single_course')
+
+ If we do not there will be an Error
+
+
+
+ So Overall there are 3 methods of implementing Routing:
+
+1. Relative path
+<a href="{{course.id}}">Link</a>
+	•	Browser appends 1 to the current page’s URL.
+	•	Works only if you’re already inside /shop/ or /courses/.
+	•	❌ Breaks if template is used on another page (e.g. /about/ → /about/1).
+
+2. Absolute hardcoded path
+<a href="/shop/{{course.id}}">Link</a>
+	•	Always points to /shop/1.
+	•	Doesn’t depend on current page.
+	•	❌ Breaks if you rename the prefix in urls.py (e.g. change /shop/ → /courses/).
+
+3. Django dynamic path
+<a href="{% url 'single_course' course.id %}">Link</a>
+	•	Django looks up the URL pattern by name (single_course).
+	•	Builds the correct absolute URL (/shop/1 or /courses/1) automatically.
+	•	✅ Most flexible — never breaks if prefixes change in urls.py.
+
+
+    SO the best versions is the third one.
+
+
+================================================================================
+=== RoutingUsingAppNames&Routes ===
+================================================================================
+
+Now we will talk about one more variant of setting up the routing,
+which is very good when working with many Apps, 
+and it's good in cases when we have to add a link to a page from a different App.
+
+
+
+In Django, each app can have its own urls.py that defines routes specific to that app. 
+By setting app_name = "shop", you give the app a namespace so its routes can be referenced 
+unambiguously (e.g., shop:single_course). This keeps app-level routing organized and avoids
+conflicts when multiple apps define routes with the same name.
+
+
+To set this all up we go to our App's urls.py and there we do these:
+1. Create a variable 'app_name' and give it some name for example 'shop'.
+
+!!! - In Django, you must use app_name (not any other variable name) 
+to define the namespace for an app’s URLs so they can be referenced unambiguously in templates.
+
+2. Go to courses.html and do this :
+<a href={% url 'shop:single_course' course.id %}>{{ course.title }}</a>
+---> 'shop:single_course'
+
+it  means we refer to App called shop and in it we  refer to path named single_course,
+and there we pass the course.id  .
+
+
+Overall, this is the most preffered way of routing.
+
+
+Now we even can go to urls.py and change the route to anything we want:
+
+path('<int:course_id>', views.single_course, name='single_course')
+path('course/<int:course_id>', views.single_course, name='single_course')
+
+
+Also let's also add a link to the Main text Course Shop that is in our base.html:
+
+<a href="" class="navbar-brand">Courses Shop</a>  
+turn this code into : 
+    <a href= {% url 'shop:index' %} class="navbar-brand">Courses Shop</a>
+
+
+Next we will talk about taking the templates directory into the main project folder.
+
+
+
+================================================================================
+=== TakingTemplatesTOtheMainDirectory ===
+================================================================================
+
+For big Django projects its better to put templates directory in the root of our project
+
+So let's do it now, and take templates to the root of our project
+
+- I moved it 
+let's check if our app is working as expected.
+if we refrsh browser it aint working now.
+
+let's go to settings.py in base and go to section called 'TEMPLATES'
+
+there is a setting there :   'APP_DIRS': True
+
+
+########
+'APP_DIRS': True makes Django auto-find templates in each app’s templates/ folder, 
+while False means it only uses the paths listed in DIRS.
+
+So that we now have to indicate the path to our templates directory in the 
+DIRS list 
+for this we can use BASE_DIR that is already in settings.py
+
+Now everything worked fine!
+
+
+As we now have one directorty in main root dedicated for templates, 
+we might get confused if two of our projects need to use the same name for two
+different tempaltes.
+
+For these cases we make sub-drectories inside templates.
+
+-let's create a neew sub-dir inside templates naming it shop.
+and take courses.html and single_course.html into it.
+
+But let's leave base.html in root of templates folder because we might need to use this base template
+in other of our apps.
+
+Now we have to change the pathes to courses.html and single_course.html in the places
+where we use them in our shop app. -- We do this in views.py file --
+
+now it should be :
+from this : return render(request, 'courses.html', {'courses': courses})
+to this: return render(request, 'shop/courses.html', {'courses': courses})
+
+from this: 
+return render(request, 'single_course.html', {'course': course})
+to this : return render(request, 'shop/single_course.html', {'course': course})
+
+-- shop cuz we put it inside shop which is inside templates.
+Django know to searhc tempaltes , but we also should indicate that it is inside shop/...
+
+
+================================================================================
+=== SHOPconclusion ===
+================================================================================
+
+We created this app 
+
+
+Next we will create an app called API and using that app we will 
+implement RestAPI service in order to be able to get Data about courses and categories
+from database in JSON format.
+
+And we will do so that we will be able to read and for instance create new records
+in our Database.
+
+- Meaning our API service will accept both GET and POST requests and even DELETE requests.
+
+
