@@ -2,7 +2,6 @@
 
 **Tech Stack:** Python, Django, SQLite3, HTML/CSS/JS, Tastypie API  
 **Live Demo:** [bit.ly/abdu-shop](https://bit.ly/abdu-shop)  
-**GitHub Repository:** [GitHub](https://github.com/abdumalikxs/courseshop)
 
 ---
 
